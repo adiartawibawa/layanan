@@ -1,31 +1,31 @@
 <div>
-    <div id="map" class="w-full h-96"></div>
+    <div id="map" class="w-full h-96" wire:ignore></div>
 </div>
 
-@push('scripts')
+@assets
     <!-- Load D3.js -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
 
     {{-- @livewireScripts --}}
+@endassets
 
+@script
     <script>
         document.addEventListener("livewire:initialized", function() {
             var url = @json(\App\Models\MapHistory::getActiveWilayahMapUrl());
 
             if (url) {
-                // Load the GeoJSON data
                 d3.json(url).then(function(data) {
+                    // Get the map container size
                     var mapElement = document.getElementById('map');
                     var width = mapElement.clientWidth;
                     var height = mapElement.clientHeight;
 
-                    // Set up the projection for the map, using Equal Earth projection
+                    // Set up map projection and path generator
                     var projection = d3.geoEqualEarth().fitSize([width, height], data);
-
-                    // Define a path generator using the projection
                     var path = d3.geoPath().projection(projection);
 
-                    // Create the SVG canvas for the map
+                    // Create an SVG element for the map
                     var svg = d3.select("#map").append('svg')
                         .attr("viewBox", `0 0 ${width} ${height}`)
                         .attr("width", width)
@@ -33,10 +33,19 @@
                         .style("max-width", "100%")
                         .style("height", "auto");
 
-                    // Create a group for the map features (regions)
-                    var g = svg.append("g");
+                    var g = svg.append("g"); // Group element for the map
 
-                    // Define static colors for each region
+                    // Create floating text in the top-left corner to display region information
+                    var infoText = svg.append("text")
+                        .attr("x", 10)
+                        .attr("y", 30)
+                        .attr("id", "floating-info")
+                        .attr("font-size", "14px")
+                        .attr("font-weight", "bold")
+                        .attr("fill", "#000")
+                        .style("display", "none"); // Initially hidden
+
+                    // Define colors for different regions (kecamatan)
                     var kecamatanColors = {
                         "KUTA SELATAN": "#FF5733",
                         "KUTA": "#33FF57",
@@ -46,7 +55,231 @@
                         "PETANG": "#33FFF5"
                     };
 
-                    // Draw the regions (districts)
+                    // Add regions (features) to the map using GeoJSON data
+                    var features = g.selectAll("path")
+                        .data(data.features)
+                        .enter().append("path")
+                        .attr("fill", d => kecamatanColors[d.properties.kecamatan_name] ||
+                            "#088") // Set region color
+                        .attr("stroke", "#000") // Set border color
+                        .attr("d", path) // Define the path for each region
+                        .attr("cursor", "pointer") // Set cursor style to pointer
+                        .style("opacity", 1)
+                        .on("click", clickedRegion) // Click event to zoom on the region
+                        .on("mouseover", function(event, d) {
+                            d3.select(this).transition().duration(300).attr("fill",
+                                "#FF0000"); // Highlight on hover
+                        })
+                        .on("mouseout", function(event, d) {
+                            d3.select(this).transition().duration(300).attr("fill", d =>
+                                kecamatanColors[d.properties.kecamatan_name] || "#088"
+                            ); // Reset color on mouse out
+                        });
+
+                    // Define zoom behavior and call it on the SVG
+                    var zoom = d3.zoom().scaleExtent([1, 8]).on("zoom", zoomed);
+                    svg.call(zoom);
+
+                    var active = null;
+
+                    // Function to reset the map to its original state (zoom out)
+                    function reset() {
+                        if (active) {
+                            features.transition().duration(500).style("opacity", 1); // Show all regions
+                            svg.transition().duration(1000).call(
+                                zoom.transform,
+                                d3.zoomIdentity, // Reset zoom
+                                d3.zoomTransform(svg.node()).invert([width / 2, height / 2])
+                            );
+                            d3.selectAll("circle").remove(); // Remove all points
+                            active = null;
+
+                            // Hide the floating info text
+                            infoText.style("display", "none");
+                        }
+                    }
+
+                    // Function that handles the region click event
+                    function clickedRegion(event, d) {
+                        event.stopPropagation();
+
+                        if (active === this) {
+                            return reset();
+                        }
+
+                        active = this;
+
+                        // Set opacity for the clicked region and hide others
+                        features.transition().duration(500)
+                            .style("opacity", function() {
+                                return this === active ? 1 : 0;
+                            });
+
+                        // Get the bounds (bounding box) of the clicked region
+                        const [
+                            [x0, y0],
+                            [x1, y1]
+                        ] = path.bounds(d);
+
+                        // Calculate region and canvas dimensions
+                        const regionWidth = x1 - x0;
+                        const regionHeight = y1 - y0;
+                        const canvasWidth = width;
+                        const canvasHeight = height;
+
+                        // Calculate the zoom scale to ensure the region fills 80% of the canvas
+                        const scale = Math.min(0.9 / Math.max(regionWidth / canvasWidth, regionHeight /
+                            canvasHeight));
+
+                        // Apply the zoom transformation to center the region
+                        svg.transition().duration(1000).call(
+                            zoom.transform,
+                            d3.zoomIdentity.translate(canvasWidth / 2, canvasHeight / 2)
+                            .scale(scale)
+                            .translate(-(x0 + x1) / 2, -(y0 + y1) / 2)
+                        );
+
+                        // Display floating region info
+                        infoText.style("display", "block")
+                            .text(
+                                `Desa: ${d.properties.desa_name}, Kecamatan: ${d.properties.kecamatan_name}`
+                            );
+
+                        // Load points (schools) for the selected region
+                        $wire.dispatch('loadPoints', {
+                            desaCode: d.properties.desa_code
+                        });
+                    }
+
+                    // Handle points (schools) loading event
+                    $wire.on('pointsLoaded', (event) => {
+                        var points = JSON.parse(event); // Parse the points data
+                        var pointsLayer = g.append("g"); // Add a new group for points
+
+                        pointsLayer.selectAll("circle").remove(); // Remove existing points
+                        pointsLayer.selectAll("path")
+                            .data(points.features)
+                            .enter().append("path") // Use path for custom SVG markers
+                            .attr("d",
+                                "M27,13.5C27,19.07 20.25,27 14.75,34.5C14.02,35.5 12.98,35.5 12.25,34.5C6.75,27 0,19.22 0,13.5C0,6.04 6.04,0 13.5,0C20.96,0 27,6.04 27,13.5Z"
+                            )
+                            .attr("transform", function(d) {
+                                var coords = projection([d.geometry.coordinates[0], d.geometry
+                                    .coordinates[1]
+                                ]);
+                                // Simplified scale factor based directly on canvas size
+                                var scaleFactor = Math.min(width, height) /
+                                    10000; // Scale relative to canvas size
+                                return `translate(${coords[0] - 13.5 * scaleFactor}, ${coords[1] - 34.5 * scaleFactor}) scale(${scaleFactor})`;
+                            })
+                            .attr("fill", "#555")
+                            .attr("cursor", "pointer") // Change cursor to hand on hover
+                            .on("mouseover", function(event, d) {
+                                d3.select(this)
+                                    .transition()
+                                    .duration(200)
+                                    .attr("fill", "orange"); // Change color on hover
+                            })
+                            .on("mouseout", function(event, d) {
+                                d3.select(this)
+                                    .transition()
+                                    .duration(200)
+                                    .attr("fill", "#555"); // Restore original color
+                            })
+                            .on("click", function(event, d) {
+                                showPointPopup(event, d
+                                    .properties); // Show popup with point info
+                            });
+                    });
+
+                    // Function to show a popup with point information
+                    function showPointPopup(event, properties) {
+                        d3.select("#info-popup").remove(); // Remove existing popup
+
+                        // Create and position the new popup
+                        var popup = d3.select("body").append("div")
+                            .attr("id", "info-popup")
+                            .style("position", "absolute")
+                            .style("background", "white")
+                            .style("border", "1px solid #ccc")
+                            .style("padding", "10px")
+                            .style("left", (event.pageX + 10) + "px")
+                            .style("top", (event.pageY + 10) + "px")
+                            .style("border-radius", "5px");
+
+                        // Add content to the popup
+                        popup.append("h4").text("Informasi Sekolah");
+                        popup.append("p").text(`Nama: ${properties.name}`);
+                        popup.append("p").text(`Bentuk: ${properties.bentuk}`);
+                        popup.append("p").text(`Jumlah Pegawai: ${properties.pegawai_count}`);
+
+                        // Add close button
+                        popup.append("button")
+                            .text("Close")
+                            .on("click", function() {
+                                d3.select("#info-popup").remove(); // Close the popup on click
+                            });
+                    }
+
+                    // Zoom handler function
+                    function zoomed(event) {
+                        const {
+                            transform
+                        } = event;
+                        g.attr("transform", transform); // Apply zoom transformation
+                        g.attr("stroke-width", 1 / transform.k); // Adjust stroke width based on zoom level
+                    }
+                }).catch(function(error) {
+                    console.error("Error loading the GeoJSON data: ", error); // Log error if loading fails
+                });
+            } else {
+                console.error("No active wilayah map found."); // Log error if no active map URL is found
+            }
+        });
+    </script>
+    {{-- <script>
+        document.addEventListener("livewire:initialized", function() {
+            var url = @json(\App\Models\MapHistory::getActiveWilayahMapUrl());
+
+            if (url) {
+                d3.json(url).then(function(data) {
+                    var mapElement = document.getElementById('map');
+                    var width = mapElement.clientWidth;
+                    var height = mapElement.clientHeight;
+
+                    var projection = d3.geoEqualEarth().fitSize([width, height], data);
+                    var path = d3.geoPath().projection(projection);
+
+                    var svg = d3.select("#map").append('svg')
+                        .attr("viewBox", `0 0 ${width} ${height}`)
+                        .attr("width", width)
+                        .attr("height", height)
+                        .style("max-width", "100%")
+                        .style("height", "auto");
+
+                    var g = svg.append("g");
+
+                    // Floating text in the top-left corner of the SVG canvas
+                    var infoText = svg.append("text")
+                        .attr("x", 10)
+                        .attr("y", 30)
+                        .attr("id", "floating-info")
+                        .attr("font-size", "14px")
+                        .attr("font-weight", "bold")
+                        .attr("fill", "#000")
+                        .style("display", "none"); // Hide initially
+
+                    // Color mapping for different regions
+                    var kecamatanColors = {
+                        "KUTA SELATAN": "#FF5733",
+                        "KUTA": "#33FF57",
+                        "KUTA UTARA": "#3357FF",
+                        "MENGWI": "#FF33A1",
+                        "ABIANSEMAL": "#FF8C33",
+                        "PETANG": "#33FFF5"
+                    };
+
+                    // Add regions to the map
                     var features = g.selectAll("path")
                         .data(data.features)
                         .enter().append("path")
@@ -55,7 +288,7 @@
                         .attr("d", path)
                         .attr("cursor", "pointer")
                         .style("opacity", 1)
-                        .on("click", clicked)
+                        .on("click", clickedRegion)
                         .on("mouseover", function(event, d) {
                             d3.select(this).transition().duration(300).attr("fill", "#FF0000");
                         })
@@ -64,14 +297,8 @@
                                 kecamatanColors[d.properties.kecamatan_name] || "#088");
                         });
 
-                    // Add tooltips with district names
-                    features.append("title").text(d => d.properties.desa_name);
-
-                    // Set up zoom functionality
-                    var zoom = d3.zoom()
-                        .scaleExtent([1, 8])
-                        .on("zoom", zoomed);
-
+                    // Define zoom behavior
+                    var zoom = d3.zoom().scaleExtent([1, 8]).on("zoom", zoomed);
                     svg.call(zoom);
 
                     var active = null;
@@ -79,19 +306,20 @@
                     function reset() {
                         if (active) {
                             features.transition().duration(500).style("opacity", 1);
-
                             svg.transition().duration(1000).call(
                                 zoom.transform,
                                 d3.zoomIdentity,
                                 d3.zoomTransform(svg.node()).invert([width / 2, height / 2])
                             );
-
-                            d3.select("#info-popup").remove();
+                            d3.selectAll("circle").remove();
                             active = null;
+
+                            // Hide floating info text
+                            infoText.style("display", "none");
                         }
                     }
 
-                    function clicked(event, d) {
+                    function clickedRegion(event, d) {
                         event.stopPropagation();
 
                         if (active === this) {
@@ -105,42 +333,52 @@
                                 return this === active ? 1 : 0;
                             });
 
+                        // Dapatkan batas (bounding box) dari region yang dipilih
                         const [
                             [x0, y0],
                             [x1, y1]
                         ] = path.bounds(d);
 
+                        // Hitung ukuran region dan ukuran canvas
+                        const regionWidth = x1 - x0;
+                        const regionHeight = y1 - y0;
+                        const canvasWidth = width;
+                        const canvasHeight = height;
+
+                        // Rasio zoom untuk memastikan region mengisi 80% dari canvas
+                        const scale = Math.min(0.9 / Math.max(regionWidth / canvasWidth, regionHeight /
+                            canvasHeight));
+
+                        // Lakukan zoom ke region dengan skala yang disesuaikan
                         svg.transition().duration(1000).call(
                             zoom.transform,
-                            d3.zoomIdentity
-                            .translate(width / 2, height / 2)
-                            .scale(Math.min(8, 0.9 / Math.max((x1 - x0) / width, (y1 - y0) / height)))
-                            .translate(-(x0 + x1) / 2, -(y0 + y1) / 2),
-                            d3.pointer(event, svg.node())
+                            d3.zoomIdentity.translate(canvasWidth / 2, canvasHeight / 2)
+                            .scale(scale)
+                            .translate(-(x0 + x1) / 2, -(y0 + y1) / 2)
                         );
 
-                        Livewire.dispatch('loadPoints', {
+                        // Tampilkan floating info dari region
+                        infoText.style("display", "block")
+                            .text(
+                                `Desa: ${d.properties.desa_name}, Kecamatan: ${d.properties.kecamatan_name}`
+                            );
+
+                        // Load points (schools) berdasarkan desaCode
+                        $wire.dispatch('loadPoints', {
                             desaCode: d.properties.desa_code
                         });
-
-                        showInfoPopup(event, d.properties);
                     }
 
-                    // Listen for the Livewire event with points data
-                    Livewire.on('pointsLoaded', (event) => {
+
+                    // Handle points loading
+                    $wire.on('pointsLoaded', (event) => {
                         var points = JSON.parse(event);
+                        var pointsLayer = g.append("g");
 
-                        console.log(points);
-
-                        var pointsLayer = features.append("g").attr("class", "points-layer");
-
-                        // // Clear old points before adding new ones
                         pointsLayer.selectAll("circle").remove();
-
                         pointsLayer.selectAll("circle")
                             .data(points.features)
-                            .enter()
-                            .append("circle")
+                            .enter().append("circle")
                             .attr("cx", function(d) {
                                 return projection([d.geometry.coordinates[0], d.geometry
                                     .coordinates[1]
@@ -151,17 +389,30 @@
                                     .coordinates[1]
                                 ])[1];
                             })
-                            .attr("r", 5)
+                            .attr("r", 1)
                             .attr("fill", "blue")
-                            .on("click", function(d) {
-                                alert(
-                                    `Sekolah: ${d.properties.name}\nBentuk: ${d.properties.bentuk}\nPegawai: ${d.properties.pegawai_count}`
-                                );
+                            .attr("cursor", "pointer") // Change cursor to hand on hover
+                            .on("mouseover", function(event, d) {
+                                d3.select(this)
+                                    .transition()
+                                    .duration(200)
+                                    .attr("r", 1.5) // Enlarge point on hover
+                                    .attr("fill", "orange"); // Change color on hover
+                            })
+                            .on("mouseout", function(event, d) {
+                                d3.select(this)
+                                    .transition()
+                                    .duration(200)
+                                    .attr("r", 1) // Restore original size
+                                    .attr("fill", "blue"); // Restore original color
+                            })
+                            .on("click", function(event, d) {
+                                showPointPopup(event, d.properties);
                             });
                     });
 
-                    function showInfoPopup(event, properties) {
-                        d3.select("#info-popup").remove(); // Remove any existing popup
+                    function showPointPopup(event, properties) {
+                        d3.select("#info-popup").remove();
 
                         var popup = d3.select("body").append("div")
                             .attr("id", "info-popup")
@@ -169,45 +420,31 @@
                             .style("background", "white")
                             .style("border", "1px solid #ccc")
                             .style("padding", "10px")
-                            .style("box-shadow", "0 0 10px rgba(0,0,0,0.5)")
                             .style("left", (event.pageX + 10) + "px")
-                            .style("top", (event.pageY + 10) + "px");
+                            .style("top", (event.pageY + 10) + "px")
+                            .style("border-radius", "5px");
 
-                        // Add the close button
+                        popup.append("h4").text("Informasi Sekolah");
+                        popup.append("p").text(`Nama: ${properties.name}`);
+                        popup.append("p").text(`Bentuk: ${properties.bentuk}`);
+                        popup.append("p").text(`Jumlah Pegawai: ${properties.pegawai_count}`);
+
+                        // Add close button
                         popup.append("button")
                             .text("Close")
-                            .style("float", "right")
-                            .style("background", "#f44336")
-                            .style("color", "white")
-                            .style("border", "none")
-                            .style("padding", "5px")
-                            .style("cursor", "pointer")
                             .on("click", function() {
-                                d3.select("#info-popup")
-                                    .remove(); // Remove the popup when the button is clicked
+                                d3.select("#info-popup").remove();
                             });
-
-                        popup.append("h4").text("Informasi Wilayah");
-                        popup.append("p").text(`Code: ${properties.desa_code}`);
-                        popup.append("p").text(`Desa: ${properties.desa_name}`);
-                        popup.append("p").text(`Kecamatan: ${properties.kecamatan_name}`);
-                        popup.append("p").text(`Kabupaten: ${properties.kabupaten_name}`);
-                        popup.append("p").text(`Provinsi: ${properties.provinsi_name}`);
                     }
-
 
                     function zoomed(event) {
                         const {
                             transform
                         } = event;
-
-                        // Apply zoom to the map
                         g.attr("transform", transform);
                         g.attr("stroke-width", 1 / transform.k);
-
-                        // Ensure points are also transformed during zoom
-                        d3.selectAll(".points-layer circle").attr("transform", transform);
                     }
+
                 }).catch(function(error) {
                     console.error("Error loading the GeoJSON data: ", error);
                 });
@@ -215,5 +452,5 @@
                 console.error("No active wilayah map found.");
             }
         });
-    </script>
-@endpush
+    </script> --}}
+@endscript

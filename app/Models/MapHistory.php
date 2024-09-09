@@ -121,6 +121,7 @@ class MapHistory extends Model
 
     public static function getSekolahsWithinDesa($desaCode)
     {
+        $features = [];
         // Dapatkan semua sekolah yang berada di dalam desa dengan desaCode yang sesuai
         $sekolahs = Sekolah::with(['desa', 'bentuk', 'pegawais', 'tanahs', 'ruangs', 'bangunans'])
             ->whereHas('desa', function ($query) use ($desaCode) {

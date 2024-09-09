@@ -2,22 +2,22 @@
 
 namespace App\Livewire\Welcome;
 
+use App\Models\MapHistory;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 class Map extends Component
 {
-    public $selectedPolygon = null;
-    public $points;
 
     #[On('loadPoints')] // Tangkap event yang dipancarkan oleh JavaScript
     public function loadPoints($desaCode)
     {
         // Dapatkan data sekolah berdasarkan desaCode
-        $this->points = \App\Models\MapHistory::getSekolahsWithinDesa($desaCode);
+        $points = MapHistory::getSekolahsWithinDesa($desaCode);
 
-        // Kirim kembali data sekolah ke frontend dengan event 'pointsLoaded'
-        $this->dispatch('pointsLoaded',  $this->points);
+        $this->dispatch('pointsLoaded', $points);
+
+        // return $this->points;
     }
 
     public function render()
