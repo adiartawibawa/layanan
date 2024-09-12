@@ -3,8 +3,6 @@
 @endpush
 
 <div>
-
-
     <div class="mx-auto max-w-[770px] text-center">
         <h2 class="mb-2.5 text-3xl font-bold text-white md:text-[38px] md:leading-[1.44]">
             <span>Berlangganan Informasi Terbaru</span>

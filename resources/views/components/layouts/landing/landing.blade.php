@@ -46,6 +46,8 @@
 
     @include('components.layouts.landing.partials.footer')
 
+    @livewire('notifications')
+
     <!-- ====== Back To Top Start -->
     <a href="javascript:void(0)"
         class="back-to-top fixed bottom-8 left-auto right-8 z-[999] hidden h-10 w-10 items-center justify-center rounded-md bg-primary text-white shadow-md transition duration-300 ease-in-out hover:bg-dark">
@@ -58,6 +60,7 @@
     <script src="{{ asset('js/swiper-bundle.min.js') }}"></script>
 
     @vite('resources/js/app.js')
+
     @vite('resources/js/landing.js')
 
     @stack('scripts')

@@ -22,12 +22,6 @@ class NewsletterSubscription extends Component implements HasForms, HasActions
     use InteractsWithActions;
     use InteractsWithForms;
 
-    public $email;
-
-    protected $rules = [
-        'email' => 'required|email|unique:subscriptions,email',
-    ];
-
     public function subscribe(): Action
     {
         return Action::make('subscribe')
@@ -39,7 +33,15 @@ class NewsletterSubscription extends Component implements HasForms, HasActions
             ->form([
                 TextInput::make('email')->label('Masukkan alamat email')->email()->required()
             ])
-            ->action(fn(Subscription $record) => $record->save())
+            ->action(function (array $data): void {
+                Subscription::create([
+                    'email' => $data['email']
+                ]);
+
+                // Notification::make()->title('Terima kasih telah berlangganan!')->body('Kini kamu akan mendapatkan update terbaru langsung ke inboxmu.');
+
+                $this->dispatch('subscription', email: $data['email']);
+            })
             ->modalIcon('heroicon-o-envelope')
             ->modalHeading('Berlangganan Informasi Terbaru')
             ->modalDescription('Tetap terhubung dengan kami dan dapatkan informasi terbaru tentang program, kegiatan, dan berita penting dari Dinas Pendidikan.
