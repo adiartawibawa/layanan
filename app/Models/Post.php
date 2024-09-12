@@ -79,6 +79,12 @@ class Post extends Model implements HasMedia
         ];
     }
 
+    // Override the route key name to use 'slug' instead of 'id'
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
     /**
      * Get the topic relationship.
      *
@@ -126,6 +132,11 @@ class Post extends Model implements HasMedia
         return $this->hasMany(Visit::class);
     }
 
+    public function getAuthorAttribute()
+    {
+        return $this->user->name;
+    }
+
     /**
      * Get the human-friendly estimated reading time of a given text.
      *
@@ -145,8 +156,8 @@ class Post extends Model implements HasMedia
             '%d %s %s',
             [
                 $minutes,
-                Str::plural(trans('canvas::app.min', [], optional(request()->user())->locale), $minutes),
-                trans('canvas::app.read', [], optional(request()->user())->locale),
+                Str::plural(trans('min', [], optional(request()->user())->locale), $minutes),
+                trans('baca', [], optional(request()->user())->locale),
             ]
         );
     }
@@ -181,6 +192,22 @@ class Post extends Model implements HasMedia
     public function scopeDraft(Builder $query): Builder
     {
         return $query->where('published_at', '=', null)->orWhere('published_at', '>', now()->toDateTimeString());
+    }
+
+    /**
+     * Method untuk mendapatkan URL dari gambar post.
+     * Jika post tidak memiliki gambar, akan mengembalikan fallback URL.
+     *
+     * @param string $conversion Nama konversi (opsional, default = null)
+     * @return string
+     */
+    public function getImageUrl(): string
+    {
+        // Fallback image jika post tidak memiliki media terkait
+        $fallbackImage = asset('https://img.freepik.com/premium-photo/world-photography-day-camera-earth_965979-16109.jpg?w=826');
+
+        // Mengambil URL gambar pertama dari koleksi 'images', atau fallback jika tidak ada
+        return $this->getFirstMediaUrl('post') ?: $fallbackImage;
     }
 
     /**

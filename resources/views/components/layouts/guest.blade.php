@@ -2,9 +2,9 @@
     <!-- ====== Banner Section Start -->
     <div
         class="relative bg-primary shadow-lg z-10 overflow-hidden pt-[120px] pb-[60px] md:pt-[130px] lg:pt-[160px] dark:bg-dark">
-        <div
-            class="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-stroke/0 via-stroke dark:via-dark-3 to-stroke/0">
-        </div>
+
+        {{ $page_cover ?? '' }}
+
         <div class="container">
             <div class="flex flex-wrap items-center -mx-4">
                 <div class="w-full px-4">
@@ -41,7 +41,7 @@
     </div>
     <!-- ====== Banner Section End -->
 
-    <section class="relative py-20 md:py-[60px] px-8">
+    <section class="relative py-20 md:py-[60px] px-8 bg-slate-50">
         <div class="container">
             {{ $slot }}
         </div>

@@ -7,6 +7,8 @@ use App\Livewire\Permohonan\CreatePermohonan;
 use App\Livewire\Permohonan\DetailPermohonan;
 use App\Livewire\Permohonan\EditPermohonan;
 use App\Livewire\Permohonan\ListPermohonan;
+use App\Livewire\Posts\AllPosts;
+use App\Livewire\Posts\DetailPosts;
 use App\Livewire\Welcome\DetailService;
 use App\Models\Layanan;
 use Illuminate\Support\Facades\Route;
@@ -24,6 +26,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::prefix('berita')->name('berita.')->group(function () {
+    Route::get('/all', AllPosts::class)->name('all');
+    Route::get('/{slug}', DetailPosts::class)->name('detail');
 });
 
 Route::get('/layanan/{slug}', DetailService::class)->name('layanan.detail');
