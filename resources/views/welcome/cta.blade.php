@@ -4,20 +4,7 @@
         <div class="relative overflow-hidden">
             <div class="-mx-4 flex flex-wrap items-stretch">
                 <div class="w-full px-4">
-                    <div class="mx-auto max-w-[770px] text-center">
-                        <h2 class="mb-2.5 text-3xl font-bold text-white md:text-[38px] md:leading-[1.44]">
-                            <span>Berlangganan Informasi Terbaru</span>
-                        </h2>
-                        <p class="mx-auto mb-6 max-w-[615px] text-base leading-[1.5] text-white">
-                            Tetap terhubung dengan kami dan dapatkan informasi terbaru tentang program, kegiatan, dan
-                            berita penting dari Dinas Pendidikan. Berlanggananlah untuk menerima update langsung di
-                            kotak masuk Anda.
-                        </p>
-                        <a href="javascript:void(0)"
-                            class="inline-block rounded-md border border-transparent bg-secondary px-7 py-3 text-base font-medium text-white transition hover:bg-[#0BB489]">
-                            Berlangganan sekarang
-                        </a>
-                    </div>
+                    @livewire('welcome.newsletter-subscription')
                 </div>
             </div>
         </div>
