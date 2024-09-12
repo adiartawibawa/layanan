@@ -42,6 +42,7 @@ class NewsletterSubscription extends Component implements HasForms, HasActions
 
                 $this->dispatch('subscription', email: $data['email']);
             })
+            ->requiresConfirmation()
             ->modalIcon('heroicon-o-envelope')
             ->modalHeading('Berlangganan Informasi Terbaru')
             ->modalDescription('Tetap terhubung dengan kami dan dapatkan informasi terbaru tentang program, kegiatan, dan berita penting dari Dinas Pendidikan.
