@@ -12,7 +12,9 @@ class JenisPtk extends Model
     use Sluggable;
 
     protected $fillable = [
-        'name', 'slug', 'desc'
+        'name',
+        'slug',
+        'desc'
     ];
 
     public function sluggable(): array
@@ -23,4 +25,10 @@ class JenisPtk extends Model
             ]
         ];
     }
+
+    // Relasi ke GuruTendik
+    // public function guruTendik()
+    // {
+    //     return $this->hasMany(GuruTendik::class, 'jenis_ptk', 'id');
+    // }
 }

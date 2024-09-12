@@ -36,4 +36,9 @@ class SekolahBentuk extends Model
             ['code' => 'PKBM', 'name' => 'Pusat Kegiatan Belajar Masyarakat', 'desc' => 'Pusat Kegiatan Belajar Masyarakat'],
         ];
     }
+
+    public function sekolah()
+    {
+        return $this->hasMany(Sekolah::class, 'sekolah_bentuks_code', 'code');
+    }
 }

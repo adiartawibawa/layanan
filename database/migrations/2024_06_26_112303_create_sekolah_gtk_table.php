@@ -15,6 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->assignOrganization();
             $table->foreignUuid('user_id')->references('id')->on('users')->onDelete('cascade');
+            // $table->foreignId('jenis_ptk')->nullable()->constrained('jenis_ptks')->onDelete('set null');
             $table->string('nama');
             $table->string('nik');
             $table->string('nuptk')->nullable();

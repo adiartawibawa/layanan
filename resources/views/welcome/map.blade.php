@@ -4,7 +4,7 @@
     <div class="absolute left-0 top-0 -z-[1] h-1/2 w-full bg-[#E9F9FF] dark:bg-dark-700 lg:h-[45%] xl:h-1/2">
     </div>
     <div class="container px-4">
-        <div class="-mx-4 flex flex-wrap items-center">
+        <div class="-mx-4 flex flex-wrap items-start">
             <div class="w-full px-4 lg:w-7/12 xl:w-7/12">
                 <div class="ud-contact-content-wrapper">
                     <div class="ud-contact-title mb-12 lg:mb-[150px]">
@@ -15,7 +15,8 @@
                             Jelajah Sekolah di Kabupaten Badung
                         </h2>
                         <p class="mt-4 text-base text-dark-4">
-                            Temukan lokasi dan informasi lengkap tentang sekolah dasar yang ada di Kabupaten Badung
+                            Temukan lokasi dan informasi lengkap tentang sekolah -sekolah yang berada dibawah naungan
+                            Bidang SD Dinas Pendidikan, Kepemudaan dan Olahraga Kabupaten Badung
                             melalui
                             peta interaktif kami. Peta ini membantu orang tua, siswa, dan masyarakat untuk mencari dan
                             mengetahui detail penting seperti alamat, kontak, dan fasilitas setiap sekolah. Jelajahi
@@ -32,13 +33,7 @@
                                 </svg>
                             </div>
                             <div>
-                                <h5 class="mb-[18px] text-lg font-semibold text-dark dark:text-white">
-                                    Sekolah Kami
-                                </h5>
-                                <p class="text-base text-body-color dark:text-dark-6">
-                                    Pusat Pemerintahan Kabupaten Badung "Mangupraja Mandala" - Jl. Raya Sempidi -
-                                    Mengwi - Badung
-                                </p>
+                                @livewire('welcome.sekolah-overview')
                             </div>
                         </div>
                         <div class="mb-8 flex w-[330px] max-w-full">
@@ -50,21 +45,13 @@
                                 </svg>
                             </div>
                             <div>
-                                <h5 class="mb-[18px] text-lg font-semibold text-dark dark:text-white">
-                                    Guru Kami
-                                </h5>
-                                <p class="text-base text-body-color dark:text-dark-6">
-                                    (0361) 900926
-                                </p>
-                                <p class="mt-1 text-base text-body-color dark:text-dark-6">
-                                    badungdisdikpora@gmail.com
-                                </p>
+                                @livewire('welcome.gtk-overview')
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="w-full px-4 lg:w-5/12 xl:w-5/12">
+            <div class="w-full lg:w-5/12 xl:w-5/12">
                 <div class="wow fadeInUp rounded-lg bg-transparent px-8 py-10 sm:px-6 sm:py-8 md:p-[60px] lg:p-6 lg:px-6 lg:py-8 2xl:p-[60px]"
                     data-wow-delay=".2s">
                     {{-- map goes here --}}
