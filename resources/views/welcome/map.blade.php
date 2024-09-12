@@ -65,7 +65,7 @@
                 </div>
             </div>
             <div class="w-full px-4 lg:w-5/12 xl:w-5/12">
-                <div class="wow fadeInUp rounded-lg bg-transparent px-8 py-10 dark:bg-dark-2 dark:shadow-none sm:px-6 sm:py-8 md:p-[60px] lg:p-6 lg:px-6 lg:py-8 2xl:p-[60px]"
+                <div class="wow fadeInUp rounded-lg bg-transparent px-8 py-10 sm:px-6 sm:py-8 md:p-[60px] lg:p-6 lg:px-6 lg:py-8 2xl:p-[60px]"
                     data-wow-delay=".2s">
                     {{-- map goes here --}}
                     @livewire('welcome.map')
