@@ -10,6 +10,7 @@ use App\Livewire\Permohonan\ListPermohonan;
 use App\Livewire\Posts\AllPosts;
 use App\Livewire\Posts\DetailPosts;
 use App\Livewire\Welcome\DetailService;
+use App\Livewire\Welcome\TestimonialForm;
 use App\Models\Layanan;
 use Illuminate\Support\Facades\Route;
 
@@ -32,6 +33,8 @@ Route::prefix('berita')->name('berita.')->group(function () {
     Route::get('/all', AllPosts::class)->name('all');
     Route::get('/{slug}', DetailPosts::class)->name('detail');
 });
+
+Route::get('/testimonial', TestimonialForm::class)->name('testimonial.create');
 
 Route::get('/layanan/{slug}', DetailService::class)->name('layanan.detail');
 
