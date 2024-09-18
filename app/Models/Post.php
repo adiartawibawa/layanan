@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Concerns\HasOrganization;
+use App\Concerns\Searchable;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -24,6 +25,7 @@ class Post extends Model implements HasMedia
     use InteractsWithMedia;
     use HasOrganization;
     use HasTags;
+    use Searchable;
 
     /**
      * The table associated with the model.
@@ -64,6 +66,10 @@ class Post extends Model implements HasMedia
         'published_at' => 'datetime:Y-m-d',
         'meta' => 'array',
     ];
+
+    protected $searchableColumns = ['title', 'body']; // Searchable columns
+
+    protected $fullTextSearchableColumns = ['body'];  // Full-Text Search
 
     /**
      * Return the sluggable configuration array for this model.

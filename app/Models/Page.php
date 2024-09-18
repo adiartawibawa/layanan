@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Concerns\BelongsToUser;
 use App\Concerns\HasOrganization;
+use App\Concerns\Searchable;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -26,6 +27,7 @@ class Page extends Model implements HasMedia
     use InteractsWithMedia;
     use HasOrganization;
     use HasTags;
+    use Searchable;
 
     /**
      * The table associated with the model.
@@ -33,6 +35,10 @@ class Page extends Model implements HasMedia
      * @var string
      */
     protected $table = 'posts';
+
+    protected $searchableColumns = ['title', 'body']; // Searchable columns
+
+    protected $fullTextSearchableColumns = ['body'];  // Full-Text Search
 
     /**
      * The attributes that aren't mass assignable.
