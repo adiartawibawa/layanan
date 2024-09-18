@@ -2,8 +2,7 @@
 
 namespace App\Livewire\Welcome;
 
-use Filament\Actions\Concerns\InteractsWithActions;
-use Filament\Actions\Contracts\HasActions;
+use App\Models\Testimonial;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -14,10 +13,9 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-class TestimonialForm extends Component implements HasForms, HasActions
+class TestimonialForm extends Component implements HasForms
 {
     use InteractsWithForms;
-    use InteractsWithActions;
 
     public ?array $data = [];
     public $rating = 0; // Rating default 0
@@ -35,8 +33,8 @@ class TestimonialForm extends Component implements HasForms, HasActions
             TextInput::make('email')->label('Email')->email()->required(),
             Textarea::make('position')->label('Jabatan')->required(),
             Textarea::make('message')->label('Testimoni')->required(),
-            SpatieMediaLibraryFileUpload::make('media')->label('Foto diri')->collection('testimoni')
-        ]);
+            SpatieMediaLibraryFileUpload::make('avatar')->label('Foto diri')->collection('testimoni')
+        ])->statePath('data');
     }
 
     // Method untuk menangkap event dari komponen star rating
@@ -48,7 +46,13 @@ class TestimonialForm extends Component implements HasForms, HasActions
 
     public function create(): void
     {
-        dd($this->form->getState());
+        Testimonial::create([
+            'name' => $this->data['name'],
+            'email' => $this->data['email'],
+            'message' => $this->data['message'],
+            'rating' => $this->rating,
+            'position' => $this->data['position']
+        ]);
     }
 
     #[Layout('components.layouts.guest')]

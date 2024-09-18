@@ -14,16 +14,20 @@
 
     <div class="mx-auto w-full max-w-2xl rounded-xl ring-1 ring-gray-200 lg:mx-0 lg:flex lg:max-w-none">
         <div class="p-8 sm:p-10 lg:flex-auto">
-            <form wire:submit.prevent="submit">
+            <form wire:submit.prevent="create">
                 {{ $this->form }}
-                <div>
-                    <label for="rating">Rating</label>
+                <div class="mt-2">
+                    <label class="text-sm font-medium leading-6 text-gray-950 dark:text-white"
+                        for="rating">Rating</label>
                     <livewire:components.star-rating rating="{{ $rating }}" maxRating="5" :readOnly="false" />
                     @error('rating')
                         <span class="error">{{ $message }}</span>
                     @enderror
                 </div>
-                <button type="submit">Submit Testimonial</button>
+                <button class="px-3 py-2 bg-primary mt-4 rounded-md text-white" type="submit">
+                    Submit
+                    Testimonial
+                </button>
             </form>
         </div>
     </div>
