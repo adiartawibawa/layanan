@@ -1,6 +1,6 @@
-<div class="-mx-4 flex flex-wrap">
+<div class="-mx-4 flex flex-wrap gap-4">
     @forelse ($posts as $post)
-        <div class="w-full px-4 md:w-1/2 lg:w-1/3">
+        <div class="w-full md:w-1/2 rounded-lg lg:w-1/3 dark:bg-slate-900 bg-slate-100">
             <div class="wow fadeInUp group mb-10" data-wow-delay=".1s">
                 <div class="mb-8 overflow-hidden rounded-[5px]">
                     <a href="{{ route('berita.detail', $post->slug) }}" class="block">
@@ -8,7 +8,7 @@
                             class="w-full md:h-64 object-cover transition group-hover:rotate-6 group-hover:scale-125" />
                     </a>
                 </div>
-                <div>
+                <div class="px-4 dark:text-white">
                     <h3>
                         <a href="{{ route('berita.detail', $post->slug) }}"
                             class="mb-4 inline-block text-xl font-semibold text-dark hover:text-primary dark:text-white dark:hover:text-primary sm:text-2xl lg:text-xl xl:text-2xl">
@@ -28,7 +28,7 @@
                     <div class="mt-2 flex gap-2 flex-wrap">
                         @foreach ($post->tags as $tag)
                             <a href="#"
-                                class="cursor-pointer relative before:absolute before:bg-primary before:bottom-0 before:left-0 before:h-full before:w-full before:origin-bottom before:scale-y-[0.15] hover:before:scale-y-100 before:transition-transform before:ease-in-out before:duration-500">
+                                class="cursor-pointer relative before:absolute before:bg-primary before:bottom-0 before:left-0 before:h-full before:w-full before:origin-bottom before:scale-y-[0.15] hover:before:scale-y-100 before:transition-transform before:ease-in-out before:duration-500 hover:text-white">
                                 <span class="relative">#{{ $tag->name }}</span>
                             </a>
                         @endforeach
