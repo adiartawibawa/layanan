@@ -18,7 +18,7 @@
             <svg data-rating="{{ $i }}" wire:click="setRating({{ $i }})"
                 xmlns="http://www.w3.org/2000/svg" fill="{{ $i <= $rating ? 'yellow' : 'none' }}" viewBox="0 0 24 24"
                 stroke="currentColor"
-                class="w-8 h-8 cursor-pointer transition-all transform hover:scale-125 hover:fill-yellow-400 hover:text-yellow-400 {{ $i <= $rating ? 'text-yellow-400' : 'text-gray-400' }}"
+                class="cursor-pointer transition-all transform hover:scale-125 hover:fill-yellow-400 hover:text-yellow-400 {{ $styleClass }} {{ $i <= $rating ? 'text-yellow-400' : 'text-gray-400' }}"
                 @if ($readOnly) style="pointer-events: none;" @endif>
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M12 2l2.39 7.26L22 9.27l-5.61 4.09L17.45 22 12 18.18 6.55 22l1.06-8.64L2 9.27l7.61-1.01L12 2z" />

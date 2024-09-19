@@ -6,8 +6,8 @@
                 <div class="rounded-xl bg-white px-4 py-[30px] shadow-testimonial dark:bg-dark sm:px-[30px]">
                     <div class="mb-[18px] flex items-center gap-[2px]">
 
-                        <livewire:components.star-rating rating="{{ $testimonial->rating }}" maxRating="5"
-                            :readOnly="true" />
+                        <livewire:components.star-rating rating="{{ $testimonial->rating }}" styleClass="w-4 h-4"
+                            maxRating="5" :readOnly="true" />
                     </div>
 
                     <p class="mb-6 text-base text-body-color dark:text-dark-6 italic">
