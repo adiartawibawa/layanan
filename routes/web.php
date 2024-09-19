@@ -27,7 +27,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
 
 Route::prefix('berita')->name('berita.')->group(function () {
     Route::get('/all', AllPosts::class)->name('all');

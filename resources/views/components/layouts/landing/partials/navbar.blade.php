@@ -3,7 +3,7 @@
     <div class="container">
         <div class="relative -mx-4 flex items-center justify-between">
             <div class="w-64 max-w-full px-4">
-                <a href="index.html" class="navbar-logo w-full py-5 inline-flex items-center">
+                <a href="{{ route('welcome') }}" class="navbar-logo w-full py-5 inline-flex items-center">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/d/d2/Lambang_Kabupaten_Badung.png"
                         alt="logo" class="header-logo w-10 h-10" />
                     <div

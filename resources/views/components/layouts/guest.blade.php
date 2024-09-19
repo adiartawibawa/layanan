@@ -41,7 +41,7 @@
     </div>
     <!-- ====== Banner Section End -->
 
-    <section class="relative py-20 md:py-[60px] px-8 bg-slate-50">
+    <section class="relative py-20 md:py-[60px] px-8 bg-slate-50 dark:bg-slate-950">
         <div class="container">
             {{ $slot }}
         </div>
