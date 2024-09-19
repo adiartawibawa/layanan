@@ -210,7 +210,7 @@ class Post extends Model implements HasMedia
     public function getImageUrl(): string
     {
         // Fallback image jika post tidak memiliki media terkait
-        $fallbackImage = asset('https://img.freepik.com/premium-photo/world-photography-day-camera-earth_965979-16109.jpg?w=826');
+        $fallbackImage = asset('images/blog/default-banner.png');
 
         // Mengambil URL gambar pertama dari koleksi 'images', atau fallback jika tidak ada
         return $this->getFirstMediaUrl('post') ?: $fallbackImage;
