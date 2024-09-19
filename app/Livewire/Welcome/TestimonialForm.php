@@ -9,6 +9,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -31,28 +32,30 @@ class TestimonialForm extends Component implements HasForms
         return $form->schema([
             TextInput::make('name')->label('Nama')->required(),
             TextInput::make('email')->label('Email')->email()->required(),
-            Textarea::make('position')->label('Jabatan')->required(),
+            TextInput::make('position')->label('Jabatan')->required(),
             Textarea::make('message')->label('Testimoni')->required(),
-            SpatieMediaLibraryFileUpload::make('avatar')->label('Foto diri')->collection('testimoni')
+            SpatieMediaLibraryFileUpload::make('avatar')->label('Foto diri')->image()->collection('avatars')
         ])->statePath('data');
     }
 
     // Method untuk menangkap event dari komponen star rating
-    #[On('updateRating')]
+    #[On('ratingUpdated')]
     public function updateRating($rating)
     {
-        $this->rating = $rating;
+        $this->data['rating'] = $rating;
     }
 
-    public function create(): void
+    public function create()
     {
-        Testimonial::create([
-            'name' => $this->data['name'],
-            'email' => $this->data['email'],
-            'message' => $this->data['message'],
-            'rating' => $this->rating,
-            'position' => $this->data['position']
-        ]);
+        $testimonial = Testimonial::create($this->form->getState());
+        $this->form->model($testimonial)->saveRelationships();
+
+        Notification::make()
+            ->title('Terimakasih telah memberikan testimoni!')
+            ->success()
+            ->send();
+
+        return $this->redirectRoute('welcome');
     }
 
     #[Layout('components.layouts.guest')]

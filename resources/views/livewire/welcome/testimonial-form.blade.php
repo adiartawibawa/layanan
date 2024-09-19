@@ -12,7 +12,7 @@
         Setiap masukan akan kami gunakan untuk meningkatkan kualitas layanan kami.
     </x-slot>
 
-    <div class="mx-auto w-full max-w-2xl rounded-xl ring-1 ring-gray-200 lg:mx-0 lg:flex lg:max-w-none">
+    <div class="dark:bg-dark mx-auto w-full max-w-2xl rounded-xl ring-1 ring-gray-200 lg:mx-0 lg:flex lg:max-w-none">
         <div class="p-8 sm:p-10 lg:flex-auto">
             <form wire:submit.prevent="create">
                 {{ $this->form }}
