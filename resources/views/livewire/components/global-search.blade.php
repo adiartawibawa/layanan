@@ -52,8 +52,9 @@
         </div>
 
         <!-- Show end of records message when no more results and results have been fetched -->
-        @if (!$hasMoreResults && !empty($results))
+        @if (empty($results) && $this->allModelsExhausted())
             <p class="text-center py-4">No more results to display.</p>
         @endif
+
     </div>
 </div>

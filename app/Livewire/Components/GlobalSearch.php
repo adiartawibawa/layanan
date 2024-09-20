@@ -10,12 +10,12 @@ class GlobalSearch extends Component
     public $results = []; // Stores search results.
     public $perPage = 5; // Number of results to show per page.
     public $page = []; // Current page for each model.
-    public $hasMoreResults = false; // Flag to check if more results are available for each model.
+    public $hasMoreResults = []; // Tracks whether more results are available per model.
 
     public function mount()
     {
-        // Initialize hasMoreResults to true when the component is mounted
-        $this->hasMoreResults = true;
+        // Initialize pagination and result flags for all models.
+        $this->resetSearchResults();
     }
 
     /**
@@ -37,29 +37,27 @@ class GlobalSearch extends Component
             $models = $this->getSearchableModels();
 
             foreach ($models as $model) {
-                // If there's no more results for this model, skip it.
+                // If no more results for this model, skip it.
                 if (!$this->hasMoreResults[$model]) {
                     continue;
                 }
 
-                // Set the current page for this model if not already set.
-                $currentPage = $this->page[$model] ?? 1;
-
                 // Perform search with pagination.
                 $paginatedResults = $model::search($this->searchQuery)
-                    ->paginate($this->perPage, ['*'], 'page', $currentPage);
+                    ->paginate($this->perPage, ['*'], 'page', $this->page[$model]);
 
-                // Append the new records to the results array instead of resetting it.
+                // Append new records to the results array.
                 $this->results[$model] = array_merge(
                     $this->results[$model] ?? [],
                     $paginatedResults->items()
                 );
 
-                // Check if there are more records to load for this model.
-                if ($paginatedResults->currentPage() >= $paginatedResults->lastPage()) {
-                    $this->hasMoreResults[$model] = false; // No more records to load for this model
-                } else {
-                    $this->hasMoreResults[$model] = true;  // More records available
+                // Determine if more records exist for this model.
+                $this->hasMoreResults[$model] = $paginatedResults->hasMorePages();
+
+                // Increment page number if more results exist.
+                if ($this->hasMoreResults[$model]) {
+                    $this->page[$model]++;
                 }
             }
         }
@@ -70,15 +68,6 @@ class GlobalSearch extends Component
      */
     public function loadMore()
     {
-        // Increment the page count for each model that still has more results.
-        $models = $this->getSearchableModels();
-
-        foreach ($models as $model) {
-            if ($this->hasMoreResults[$model]) {
-                $this->page[$model] = ($this->page[$model] ?? 1) + 1;
-            }
-        }
-
         $this->performSearch(); // Load more results for each model.
     }
 
@@ -87,13 +76,12 @@ class GlobalSearch extends Component
      */
     public function resetSearchResults()
     {
+        $this->results = [];
         $this->page = [];
         $this->hasMoreResults = [];
-        $this->results = [];
 
-        // Initialize pagination and result flags for all models.
-        $models = $this->getSearchableModels();
-        foreach ($models as $model) {
+        // Initialize for all searchable models.
+        foreach ($this->getSearchableModels() as $model) {
             $this->page[$model] = 1;
             $this->hasMoreResults[$model] = true;
         }
@@ -108,20 +96,36 @@ class GlobalSearch extends Component
     {
         $models = [];
 
-        // Scan the app/Models directory for all model files
+        // Scan the app/Models directory for all model files.
         $modelFiles = glob(app_path('Models') . '/*.php');
 
         foreach ($modelFiles as $modelFile) {
-            // Get the full class name of the model
+            // Get the full class name of the model.
             $modelClass = 'App\\Models\\' . basename($modelFile, '.php');
 
-            // Check if the model uses the Searchable trait
+            // Check if the model uses the Searchable trait.
             if (in_array('App\Concerns\Searchable', class_uses($modelClass))) {
-                $models[] = $modelClass; // Add the model to the list
+                $models[] = $modelClass; // Add the model to the list.
             }
         }
 
         return $models;
+    }
+
+    /**
+     * Check if all searchable models have no more results.
+     *
+     * @return bool
+     */
+    public function allModelsExhausted()
+    {
+        foreach ($this->getSearchableModels() as $model) {
+            if ($this->hasMoreResults[$model] ?? false) {
+                return false; // At least one model still has more results.
+            }
+        }
+
+        return true; // All models are exhausted.
     }
 
     /**
