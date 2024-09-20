@@ -141,40 +141,6 @@
 
         // Menambahkan event listener untuk 'scroll' yang memicu fungsi onScroll ketika halaman di-scroll
         window.document.addEventListener("scroll", onScroll);
-
-        // ==== Testimonial ====
-        // Membuat instance baru dari Swiper untuk carousel testimonial
-        const testimonialSwiper = new Swiper(".testimonial-carousel", {
-            // Jumlah slide yang ditampilkan dalam satu baris
-            slidesPerView: 1,
-            // Jarak antar slide
-            spaceBetween: 30,
-
-            // Navigasi panah
-            navigation: {
-                nextEl: ".swiper-button-next", // Elemen untuk tombol berikutnya
-                prevEl: ".swiper-button-prev", // Elemen untuk tombol sebelumnya
-            },
-
-            // Pengaturan tampilan berdasarkan ukuran layar (breakpoints)
-            breakpoints: {
-                640: {
-                    // Untuk layar dengan lebar minimal 640px, tampilkan 2 slide
-                    slidesPerView: 2,
-                    spaceBetween: 30,
-                },
-                1024: {
-                    // Untuk layar dengan lebar minimal 1024px, tampilkan 3 slide
-                    slidesPerView: 3,
-                    spaceBetween: 30,
-                },
-                1280: {
-                    // Untuk layar dengan lebar minimal 1280px, tampilkan 3 slide
-                    slidesPerView: 3,
-                    spaceBetween: 30,
-                },
-            },
-        });
     </script>
 
 </body>
