@@ -34,6 +34,10 @@ class Post extends Model implements HasMedia
      */
     protected $table = 'posts';
 
+    protected $searchableColumns = ['title', 'body']; // Searchable columns
+
+    protected $fullTextSearchableColumns = ['body'];  // Full-Text Search
+
     /**
      * The attributes that aren't mass assignable.
      *
@@ -67,9 +71,15 @@ class Post extends Model implements HasMedia
         'meta' => 'array',
     ];
 
-    protected $searchableColumns = ['title', 'body']; // Searchable columns
+    public function getFriendlyModelName()
+    {
+        return 'Berita';
+    }
 
-    protected $fullTextSearchableColumns = ['body'];  // Full-Text Search
+    public function getDisplayableAttribute()
+    {
+        return $this->title; // Or any logic to choose the most important field
+    }
 
     /**
      * Return the sluggable configuration array for this model.
