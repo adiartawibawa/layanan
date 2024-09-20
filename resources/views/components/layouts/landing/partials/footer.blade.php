@@ -60,36 +60,7 @@
                     </div>
                 </div>
             </div>
-            <div class="w-full px-4 sm:w-1/2 md:w-1/2 lg:w-2/12 xl:w-2/12">
-                <div class="mb-10 w-full">
-                    <h4 class="mb-9 text-lg font-semibold text-white">Tentang Kami</h4>
-                    <ul>
-                        <li>
-                            <a href="javascript:void(0)"
-                                class="mb-3 inline-block text-base text-gray-7 hover:text-primary">
-                                Beranda
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0)"
-                                class="mb-3 inline-block text-base text-gray-7 hover:text-primary">
-                                Features
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0)"
-                                class="mb-3 inline-block text-base text-gray-7 hover:text-primary">
-                                Tentang
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:void(0)"
-                                class="mb-3 inline-block text-base text-gray-7 hover:text-primary">
-                                Testimonial
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+            <div class="w-full px-4 sm:w-1/2 md:w-1/2 lg:w-3/12 xl:w-2/12">
             </div>
             <div class="w-full px-4 sm:w-1/2 md:w-1/2 lg:w-3/12 xl:w-2/12">
                 <div class="mb-10 w-full">
@@ -147,22 +118,16 @@
                 <div class="mb-10 w-full">
                     <h4 class="mb-9 text-lg font-semibold text-white">Kegiatan Terbaru</h4>
                     <div class="flex flex-col gap-8">
-                        <a href="blog-details.html" class="group flex items-center gap-[22px]">
+                        {{-- <a href="blog-details.html" class="group flex items-center gap-[22px]">
                             <div class="overflow-hidden rounded">
                                 <img src="./images/blog/blog-footer-01.jpg" alt="blog" />
                             </div>
                             <span class="max-w-[180px] text-base text-gray-7 group-hover:text-white">
                                 I think really important to design with...
                             </span>
-                        </a>
-                        <a href="blog-details.html" class="group flex items-center gap-[22px]">
-                            <div class="overflow-hidden rounded">
-                                <img src="./images/blog/blog-footer-02.jpg" alt="blog" />
-                            </div>
-                            <span class="max-w-[180px] text-base text-gray-7 group-hover:text-white">
-                                Recognizing the need is the primary...
-                            </span>
-                        </a>
+                        </a> --}}
+                        <livewire:posts.all-posts :viewMode="'list'" :postsPerPage="2" :infiniteScroll="false"
+                            :showDetails="['publish_date' => false, 'author' => false, 'read_time' => false]" />
                     </div>
                 </div>
             </div>
