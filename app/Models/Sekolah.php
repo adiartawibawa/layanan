@@ -69,4 +69,52 @@ class Sekolah extends Model implements HasMedia
     {
         return $this->hasMany(SarprasBangunan::class, 'organization_id', 'organization_id');
     }
+
+    // Definisikan accessor untuk properti meta
+    public function getMetaAttribute($value)
+    {
+        // Pastikan value tidak null dan lakukan decode JSON
+        return $value ? json_decode($value, true) : null;
+    }
+
+    // Accessor untuk menggabungkan alamat lengkap
+    public function getAlamatLengkapAttribute()
+    {
+        $desa = $this->desa ? $this->desa->name : 'Tidak ada desa';
+        $kecamatan = $this->desa ? $this->desa->kecamatan->name : 'Tidak ada kecamatan'; // Mengasumsikan ada relasi ke kecamatan
+        $kodePos = $this->desa ? $this->desa->kode_pos : 'Tidak ada kode pos'; // Mengasumsikan ada kolom kode pos di tabel desa
+
+        // Format the address and capitalize the first letter of each word
+        $alamatLengkap = "{$this->alamat}, Desa / Kelurahan {$desa}, Kecamatan {$kecamatan} - Kode Pos: {$kodePos}";
+
+        return ucwords(strtolower($alamatLengkap));
+    }
+
+    /**
+     * Scope a query to only include schools matching the given NPSN.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $npsn
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByNpsn($query, string $npsn)
+    {
+        return $query->where('npsn', $npsn);
+    }
+
+    /**
+     * Perform a search based on the given keyword, matching on NPSN or other fields.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $keyword
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeSearch($query, string $keyword)
+    {
+        return $query->where(function ($query) use ($keyword) {
+            $query->where('npsn', 'LIKE', "%{$keyword}%")
+                ->orWhere('nama', 'LIKE', "%{$keyword}%")
+                ->orWhere('status', 'LIKE', "%{$keyword}%");
+        });
+    }
 }
