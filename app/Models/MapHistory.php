@@ -26,9 +26,9 @@ class MapHistory extends Model
                 $sekolahs = Sekolah::with(['desa', 'bentuk', 'pegawais', 'tanahs', 'ruangs', 'bangunans'])->get();
 
                 foreach ($sekolahs as $sekolah) {
-                    $meta = json_decode($sekolah->meta, true);
-                    $latitude = isset($meta['lat']) ? floatval($meta['lat']) : null;
-                    $longitude = isset($meta['lon']) ? floatval($meta['lon']) : null;
+
+                    $latitude = isset($sekolah->meta['lat']) ? floatval($sekolah->meta['lat']) : null;
+                    $longitude = isset($sekolah->meta['lon']) ? floatval($sekolah->meta['lon']) : null;
 
                     if ($latitude !== null && $longitude !== null) {
                         $features[] = [
@@ -130,9 +130,9 @@ class MapHistory extends Model
             ->get();
 
         foreach ($sekolahs as $sekolah) {
-            $meta = json_decode($sekolah->meta, true);
-            $latitude = isset($meta['lat']) ? floatval($meta['lat']) : null;
-            $longitude = isset($meta['lon']) ? floatval($meta['lon']) : null;
+
+            $latitude = isset($sekolah->meta['lat']) ? floatval($sekolah->meta['lat']) : null;
+            $longitude = isset($sekolah->meta['lon']) ? floatval($sekolah->meta['lon']) : null;
 
             if ($latitude !== null && $longitude !== null) {
                 $features[] = [
