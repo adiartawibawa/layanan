@@ -207,17 +207,40 @@
                             .style("border-radius", "5px");
 
                         // Add content to the popup
-                        popup.append("h4").text("Informasi Sekolah");
-                        popup.append("p").text(`Nama: ${properties.name}`);
-                        popup.append("p").text(`Bentuk: ${properties.bentuk}`);
-                        popup.append("p").text(`Jumlah Pegawai: ${properties.pegawai_count}`);
+                        popup.append("h4")
+                            .attr("class", "font-bold text-lg mb-2 text-gray-800")
+                            .text("Informasi Sekolah");
+                        popup.append("p")
+                            .attr("class", "text-sm text-gray-700 mb-1")
+                            .text(`Nama: ${properties.nama}`);
+                        popup.append("p")
+                            .attr("class", "text-sm text-gray-700 mb-1")
+                            .text(`Bentuk: ${properties.bentuk}`);
+                        popup.append("p")
+                            .attr("class", "text-sm text-gray-700 mb-4")
+                            .text(`Jumlah Pegawai: ${properties.pegawai_count}`);
 
-                        // Add close button
+                        // Add a detail link button
+                        popup.append("a")
+                            .attr("href",
+                                `/sekolah/${properties.npsn}/detail`
+                            ) // Link to the detail page using the `npsn`
+                            .attr("class",
+                                "inline-block bg-blue-500 text-white font-semibold py-1 px-2 rounded hover:bg-blue-600 transition duration-300"
+                            )
+                            .attr("target", '_blank')
+                            .text("View Details");
+
+                        // Add close button with Tailwind styling
                         popup.append("button")
+                            .attr("class",
+                                "ml-4 inline-block bg-primary text-white font-semibold py-1 px-2 rounded hover:bg-red-600 transition duration-300"
+                            )
                             .text("Close")
                             .on("click", function() {
                                 d3.select("#info-popup").remove(); // Close the popup on click
                             });
+
                     }
 
                     // Zoom handler function
