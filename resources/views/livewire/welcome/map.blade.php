@@ -89,7 +89,7 @@
                                 d3.zoomIdentity, // Reset zoom
                                 d3.zoomTransform(svg.node()).invert([width / 2, height / 2])
                             );
-                            d3.selectAll("circle").remove(); // Remove all points
+                            d3.selectAll("image").remove(); // Remove all points
                             active = null;
 
                             // Hide the floating info text
@@ -155,39 +155,48 @@
                         var points = JSON.parse(event); // Parse the points data
                         var pointsLayer = g.append("g"); // Add a new group for points
 
-                        pointsLayer.selectAll("circle").remove(); // Remove existing points
-                        pointsLayer.selectAll("circle")
+                        pointsLayer.selectAll("image").remove(); // Remove existing points (if any)
+                        pointsLayer.selectAll("image")
                             .data(points.features)
-                            .enter().append("circle")
-                            .attr("cx", function(d) {
+                            .enter().append("image")
+                            .attr("xlink:href", function(d) {
+                                // Ambil URL ikon berdasarkan bentuk sekolah
+                                return "{{ asset('icon/school-' . strtolower(':bentuk_code') . '.png') }}"
+                                    .replace(':bentuk_code', d.properties.bentuk_code
+                                        .toLowerCase());
+                            })
+                            .attr("x", function(d) {
                                 return projection([d.geometry.coordinates[0], d.geometry
                                     .coordinates[1]
-                                ])[0];
+                                ])[0] - 6;
                             })
-                            .attr("cy", function(d) {
+                            .attr("y", function(d) {
                                 return projection([d.geometry.coordinates[0], d.geometry
                                     .coordinates[1]
-                                ])[1];
+                                ])[1] - 6;
                             })
-                            .attr("r", 1)
-                            .attr("fill", "blue")
+                            .attr("width", 6) // Sesuaikan ukuran ikon
+                            .attr("height", 6) // Sesuaikan ukuran ikon
                             .attr("cursor", "pointer") // Change cursor to hand on hover
                             .on("mouseover", function(event, d) {
                                 d3.select(this)
                                     .transition()
                                     .duration(200)
-                                    .attr("r", 2) // Enlarge point on hover
-                                    .attr("fill", "orange"); // Change color on hover
+                                    .attr("width", 12) // Perbesar ikon pada hover
+                                    .attr("height", 12); // Perbesar ikon pada hover
                             })
                             .on("mouseout", function(event, d) {
                                 d3.select(this)
                                     .transition()
                                     .duration(200)
-                                    .attr("r", 1) // Restore original size
-                                    .attr("fill", "blue"); // Restore original color
+                                    .attr("width", 6) // Kembalikan ukuran ikon semula
+                                    .attr("height", 6); // Kembalikan ukuran ikon semula
                             })
                             .on("click", function(event, d) {
-                                showPointPopup(event, d.properties);
+                                console.log(d);
+
+                                showPointPopup(event, d
+                                    .properties); // Panggil fungsi untuk menampilkan popup
                             });
                     });
 
