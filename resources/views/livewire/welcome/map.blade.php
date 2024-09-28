@@ -67,11 +67,20 @@
                         .on("mouseover", function(event, d) {
                             d3.select(this).transition().duration(300).attr("fill",
                                 "#FF0000"); // Highlight on hover
+                            // Display floating region info
+                            infoText.style("display", "block")
+                                .text(
+                                    `Desa: ${d.properties.desa_name}, Kecamatan: ${d.properties.kecamatan_name}`
+                                    )
+                                .attr("x", event.pageX) // Posisi info text sesuai dengan posisi mouse
+                                .attr("y", event.pageY - 10); // Sedikit di atas mouse
                         })
                         .on("mouseout", function(event, d) {
                             d3.select(this).transition().duration(300).attr("fill", d =>
                                 kecamatanColors[d.properties.kecamatan_name] || "#088"
                             ); // Reset color on mouse out
+                            // Sembunyikan floating info
+                            infoText.style("display", "none");
                         });
 
                     // Define zoom behavior and call it on the SVG
