@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Components;
 
+use Illuminate\Pagination\LengthAwarePaginator;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -9,30 +10,39 @@ class DataTable extends Component
 {
     use WithPagination;
 
-    public $columns = []; // Daftar kolom yang akan ditampilkan
-    public $data = []; // Data untuk ditampilkan
-    public $perPage = 10; // Jumlah item per halaman
+    public $columns = [];
+    public $data = [];
+    public $perPage = 10;
 
-    public function mount($columns, $data, $perPage = 10)
+    // Customizing the pagination view
+    // protected $paginationTheme = 'tailwind';
+
+    public function mount(array $columns, $data, $perPage = 10)
     {
         $this->columns = $columns;
         $this->data = $data;
         $this->perPage = $perPage;
     }
 
-    public function updatingPerPage()
-    {
-        // Reset pagination ketika jumlah item per halaman berubah
-        $this->resetPage();
-    }
-
     public function render()
     {
-        // Mengatur data yang ditampilkan sesuai dengan pagination
-        $paginatedData = collect($this->data)->forPage($this->page, $this->perPage);
+        // Paginate the data collection
+        $paginatedData = $this->paginate($this->data, $this->perPage);
 
         return view('livewire.components.data-table', [
+            'columns' => $this->columns,
             'paginatedData' => $paginatedData,
         ]);
+    }
+
+    public function paginate($items, $perPage = null, $page = null, $options = [])
+    {
+        $perPage = $perPage ?: $this->perPage;
+        $page = $page ?: (LengthAwarePaginator::resolveCurrentPage() ?? 1);
+        $items = collect($items);
+        $total = $items->count();
+        $results = $items->slice(($page - 1) * $perPage, $perPage)->values();
+
+        return new LengthAwarePaginator($results, $total, $perPage, $page, $options);
     }
 }
