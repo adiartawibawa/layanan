@@ -14,7 +14,7 @@
                         <h2 class="max-w-[460px] text-[35px] font-semibold leading-[1.14] text-dark dark:text-white">
                             Jelajah Sekolah di Kabupaten Badung
                         </h2>
-                        <p class="mt-4 text-base text-dark-4">
+                        <p class="mt-4 mb-6  text-base text-dark-4">
                             Temukan lokasi dan informasi lengkap tentang sekolah -sekolah yang berada dibawah naungan
                             Bidang SD Dinas Pendidikan, Kepemudaan dan Olahraga Kabupaten Badung
                             melalui
@@ -22,6 +22,10 @@
                             mengetahui detail penting seperti alamat, kontak, dan fasilitas setiap sekolah. Jelajahi
                             sekarang dan temukan sekolah yang tepat untuk kebutuhan pendidikan Anda.
                         </p>
+                        <a href="{{ route('sekolah.map') }}" target="_blank"
+                            class="inline-flex items-center justify-center rounded-md border border-primary bg-primary px-7 py-3 text-center text-base font-medium text-white hover:border-red-dark hover:bg-red-dark">
+                            Jelajahi Sekarang
+                        </a>
                     </div>
                     <div class="mb-12 flex flex-wrap justify-between lg:mb-0">
                         <div class="mb-8 flex w-[330px] max-w-full">
