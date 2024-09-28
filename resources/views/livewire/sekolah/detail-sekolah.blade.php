@@ -19,7 +19,7 @@
         <div class="w-full p-4 mb-6 rounded-lg shadow-md bg-white dark:text-white dark:bg-dark md:w-2/3">
             {{-- Detail Information goes here --}}
             <!-- Starts component -->
-            <div x-data="{ activeTab: 0 }" class="mx-auto w-full mt-6">
+            <div x-data="{ activeTab: 2 }" class="mx-auto w-full mt-6">
                 <!-- Tab List -->
                 <ul role="tablist" class="-mb-px flex items-stretch gap-2 text-slate-500">
                     <!-- Tab 1 -->
@@ -98,241 +98,19 @@
                                 <div>
                                     <div class="mb-4">
                                         <h3 class="bg-primary w-full uppercase text-white p-1 mb-2">Tanah</h3>
-                                        <table class="min-w-full">
-                                            <thead class="bg-white border-b">
-                                                <tr>
-                                                    <th scope="col"
-                                                        class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                                        #
-                                                    </th>
-                                                    <th scope="col"
-                                                        class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                                        Nama Sertipikat
-                                                    </th>
-                                                    <th scope="col"
-                                                        class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                                        No. Sertipikat
-                                                    </th>
-                                                    <th scope="col"
-                                                        class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                                        Panjang
-                                                    </th>
-                                                    <th scope="col"
-                                                        class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                                        Lebar
-                                                    </th>
-                                                    <th scope="col"
-                                                        class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                                        Luas
-                                                    </th>
-                                                    <th scope="col"
-                                                        class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                                        Luas Tersedia
-                                                    </th>
-                                                    <th scope="col"
-                                                        class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                                        NJOP
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($sekolah->tanahs as $tanah)
-                                                    <tr class="bg-gray-100 border-b">
-                                                        <td
-                                                            class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-
-                                                        </td>
-                                                        <td
-                                                            class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                            {{ $tanah->nama }}
-                                                        </td>
-                                                        <td
-                                                            class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                            {{ $tanah->no_sertifikat }}
-                                                        </td>
-                                                        <td
-                                                            class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                            {{ $tanah->panjang }}
-                                                        </td>
-                                                        <td
-                                                            class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                            {{ $tanah->lebar }}
-                                                        </td>
-                                                        <td
-                                                            class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                            {{ $tanah->luas }}
-                                                        </td>
-                                                        <td
-                                                            class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                            {{ $tanah->luas_tersedia }}
-                                                        </td>
-                                                        <td
-                                                            class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                            {{ $tanah->njop }}
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
+                                        <livewire:components.data-table :per-page="$perPage" :columns="$tanahColumns"
+                                            :data="$tanahData" />
                                     </div>
                                     <div class="mb-4">
                                         <h3 class="bg-primary w-full uppercase text-white p-1 mb-2">Bangunan dimiliki
                                         </h3>
-                                        <table class="min-w-full">
-                                            <thead class="bg-white border-b">
-                                                <tr>
-                                                    <th scope="col"
-                                                        class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                                        Kode
-                                                    </th>
-                                                    <th scope="col"
-                                                        class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                                        Nama Bangunan
-                                                    </th>
-                                                    <th scope="col"
-                                                        class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                                        Kepemilikan
-                                                    </th>
-                                                    <th scope="col"
-                                                        class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                                        Panjang
-                                                    </th>
-                                                    <th scope="col"
-                                                        class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                                        Lebar
-                                                    </th>
-                                                    <th scope="col"
-                                                        class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                                        Luas
-                                                    </th>
-                                                    <th scope="col"
-                                                        class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                                        Kapasitas
-                                                    </th>
-                                                    <th scope="col"
-                                                        class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                                        Nilai Aset
-                                                    </th>
-                                                    <th scope="col"
-                                                        class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                                        Jumlah Lantai
-                                                    </th>
-                                                    <th scope="col"
-                                                        class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                                        Tahun Bangun
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($sekolah->bangunans as $bangunan)
-                                                    <tr class="bg-gray-100 border-b">
-                                                        <td
-                                                            class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                            {{ $bangunan->kode_bangunan }}
-                                                        </td>
-                                                        <td
-                                                            class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                            {{ $bangunan->nama }}
-                                                        </td>
-                                                        <td
-                                                            class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                            {{ $bangunan->kepemilikan }}
-                                                        </td>
-                                                        <td
-                                                            class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                            {{ $bangunan->panjang }}
-                                                        </td>
-                                                        <td
-                                                            class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                            {{ $bangunan->lebar }}
-                                                        </td>
-                                                        <td
-                                                            class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                            {{ $bangunan->luas }}
-                                                        </td>
-                                                        <td
-                                                            class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                            {{ $bangunan->kapasitas }}
-                                                        </td>
-                                                        <td
-                                                            class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                            {{ $bangunan->nilai_aset }}
-                                                        </td>
-                                                        <td
-                                                            class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                            {{ $bangunan->jml_lantai }}
-                                                        </td>
-                                                        <td
-                                                            class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                            {{ $bangunan->tahun_bangun }}
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
+                                        <livewire:components.data-table :per-page="$perPage" :columns="$bangunanColumns"
+                                            :data="$bangunanData" />
                                     </div>
                                     <div class="mb-4">
                                         <h3 class="bg-primary w-full uppercase text-white p-1 mb-2">Ruang dimiliki</h3>
-                                        <table class="min-w-full">
-                                            <thead class="bg-white border-b">
-                                                <tr>
-                                                    <th scope="col"
-                                                        class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                                        Kode
-                                                    </th>
-                                                    <th scope="col"
-                                                        class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                                        Nama Ruang
-                                                    </th>
-                                                    <th scope="col"
-                                                        class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                                        Panjang
-                                                    </th>
-                                                    <th scope="col"
-                                                        class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                                        Lebar
-                                                    </th>
-                                                    <th scope="col"
-                                                        class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                                        Luas
-                                                    </th>
-                                                    <th scope="col"
-                                                        class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
-                                                        Kapasitas
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($sekolah->ruangs as $ruang)
-                                                    <tr class="bg-gray-100 border-b">
-                                                        <td
-                                                            class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                            {{ $ruang->kode_ruang }}
-                                                        </td>
-                                                        <td
-                                                            class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                            {{ $ruang->nama }}
-                                                        </td>
-                                                        <td
-                                                            class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                            {{ $ruang->panjang }}
-                                                        </td>
-                                                        <td
-                                                            class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                            {{ $ruang->lebar }}
-                                                        </td>
-                                                        <td
-                                                            class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                            {{ $ruang->luas }}
-                                                        </td>
-                                                        <td
-                                                            class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
-                                                            {{ $ruang->kapasitas }}
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
+                                        <livewire:components.data-table :per-page="$perPage" :columns="$ruangColumns"
+                                            :data="$ruangData" />
                                     </div>
                                 </div>
                             </li>
