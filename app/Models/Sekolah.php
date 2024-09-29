@@ -117,4 +117,10 @@ class Sekolah extends Model implements HasMedia
                 ->orWhere('status', 'LIKE', "%{$keyword}%");
         });
     }
+
+    // Method untuk menentukan ikon berdasarkan bentuk sekolah
+    public function getIconAttribute()
+    {
+        return asset('icon/school-' . strtolower($this->bentuk->code) . '.png');
+    }
 }
