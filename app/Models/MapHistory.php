@@ -52,6 +52,9 @@ class MapHistory extends Model
                                 'ruang_count' => $sekolah->ruangs->count(),
                                 'bangunan_count' => $sekolah->bangunans->count(),
                             ],
+                            'styles' => [
+                                'icon' => $sekolah->icon
+                            ],
                         ];
                     }
                 }
@@ -80,6 +83,7 @@ class MapHistory extends Model
                                 'kabupaten_name' => $desa->kecamatan->kabupaten->name,
                                 'provinsi_name' => $desa->kecamatan->kabupaten->provinsi->name,
                             ],
+                            'styles' => $desa->style,
                         ];
                     } else {
                         Log::warning('No geometry found for Desa: ' . $desa->name);
@@ -113,10 +117,17 @@ class MapHistory extends Model
         ]);
     }
 
-    // Fungsi untuk mendapatkan URL file GeoJSON yang aktif
+    // Fungsi untuk mendapatkan URL file Wilayah GeoJSON yang aktif
     public static function getActiveWilayahMapUrl()
     {
         $mapHistory = self::where('is_active', true)->where('type', 'wilayah')->first();
+        return $mapHistory ? asset('storage/' . $mapHistory->file_path) : null;
+    }
+
+    // Fungsi untuk mendapatkan URL file Sekolah GeoJSON yang aktif
+    public static function getActiveSekolahMapUrl()
+    {
+        $mapHistory = self::where('is_active', true)->where('type', 'sekolah')->first();
         return $mapHistory ? asset('storage/' . $mapHistory->file_path) : null;
     }
 
