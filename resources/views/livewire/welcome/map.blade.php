@@ -45,12 +45,12 @@
 
                     // Define colors for different regions (kecamatan)
                     var kecamatanColors = {
-                        "KUTA SELATAN": "#FF5733",
-                        "KUTA": "#33FF57",
-                        "KUTA UTARA": "#3357FF",
-                        "MENGWI": "#FF33A1",
-                        "ABIANSEMAL": "#FF8C33",
-                        "PETANG": "#33FFF5"
+                        "KUTA SELATAN": "#1fdce5",
+                        "KUTA": "#37e7d3",
+                        "KUTA UTARA": "#66f0bb",
+                        "MENGWI": "#96f69f",
+                        "ABIANSEMAL": "#c7f984",
+                        "PETANG": "#f9f871"
                     };
 
                     // Add regions (features) to the map using GeoJSON data
@@ -71,7 +71,7 @@
                             infoText.style("display", "block")
                                 .text(
                                     `Desa: ${d.properties.desa_name}, Kecamatan: ${d.properties.kecamatan_name}`
-                                    )
+                                )
                                 .attr("x", event.pageX) // Posisi info text sesuai dengan posisi mouse
                                 .attr("y", event.pageY - 10); // Sedikit di atas mouse
                         })
