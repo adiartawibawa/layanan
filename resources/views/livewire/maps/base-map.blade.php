@@ -1,5 +1,5 @@
 <!-- Div container untuk Leaflet Map -->
-<div style="height: {{ $height }}; width: {{ $width }};">
+<div wire:ignore style="height: {{ $height }}; width: {{ $width }};">
     <div id="{{ $mapId }}" class="h-full w-full"></div>
 </div>
 
@@ -18,7 +18,7 @@
 
             // Tambahkan tile layer dari OpenStreetMap
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                minZoom: 5,
+                // minZoom: 5,
                 maxZoom: 19,
                 attribution: '&copy; OpenStreetMap contributors'
             }).addTo(map);
