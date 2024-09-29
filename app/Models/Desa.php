@@ -30,17 +30,17 @@ class Desa extends Model
 
     public function getKecamatanNameAttribute()
     {
-        return $this->kecamatan->name;
+        return $this->kecamatan->name ?? null;
     }
 
     public function getKabupatenNameAttribute()
     {
-        return $this->kecamatan->kabupaten->name;
+        return $this->kecamatan->kabupaten->name ?? null;
     }
 
     public function getProvinsiNameAttribute()
     {
-        return $this->kecamatan->kabupaten->provinsi->name;
+        return $this->kecamatan->kabupaten->provinsi->name ?? null;
     }
 
     /**
@@ -61,5 +61,26 @@ class Desa extends Model
             return $desa->code;
         }
         return null;
+    }
+
+    // Property style untuk Polygon/LineString
+    public function getStyleAttribute()
+    {
+        $colorMap = [
+            'Kuta Selatan' => '#1fdce5',
+            'Kuta' => '#37e7d3',
+            'Kuta Utara' => '#66f0bb',
+            'Mengwi' => '#96f69f',
+            'Abiansemal' => '#c7f984',
+            'Petang' => '#f9f871',
+        ];
+
+        return [
+            'stroke' => '#364b44',
+            'stroke-width' => 2,
+            'stroke-opacity' => 1,
+            'fill' => $colorMap[ucwords(strtolower($this->kecamatan->name ?? ''))] ?? '#364b44',
+            'fill-opacity' => 0.6,
+        ];
     }
 }
