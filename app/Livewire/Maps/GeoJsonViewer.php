@@ -62,7 +62,20 @@ class GeoJsonViewer extends Component
             'geoJsonData' => $this->filteredGeoJson,
         ]);
 
-        dd($this->filteredGeoJson);
+        // Emit the filtered results to GeoJsonSearch component
+        $searchResults = array_map(function ($feature) {
+            return [
+                'id' => $feature['properties']['id'] ?? null,
+                'name' => $feature['properties']['nama'] ?? '',
+                'address' => $feature['properties']['alamat'] ?? '',
+            ];
+        }, $this->filteredGeoJson['features']);
+
+        // Dispatch the results so the GeoJsonSearch component can listen
+        $this->dispatch('updateSearchResults', [
+            'results' => $searchResults,
+            'layerId' => $this->layerId, // Include layerId to differentiate results from different components
+        ]);
     }
 
     public function fetchGeoJson($url)
