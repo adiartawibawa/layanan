@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Concerns\HasOrganization;
+use App\Concerns\Searchable;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
@@ -17,6 +18,7 @@ class Sekolah extends Model implements HasMedia
     use SoftDeletes;
     use Sluggable;
     use HasOrganization;
+    use Searchable;
 
     protected $fillable = [
         'npsn',
@@ -109,14 +111,14 @@ class Sekolah extends Model implements HasMedia
      * @param string $keyword
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeSearch($query, string $keyword)
-    {
-        return $query->where(function ($query) use ($keyword) {
-            $query->where('npsn', 'LIKE', "%{$keyword}%")
-                ->orWhere('nama', 'LIKE', "%{$keyword}%")
-                ->orWhere('status', 'LIKE', "%{$keyword}%");
-        });
-    }
+    // public function scopeSearch($query, string $keyword)
+    // {
+    //     return $query->where(function ($query) use ($keyword) {
+    //         $query->where('npsn', 'LIKE', "%{$keyword}%")
+    //             ->orWhere('nama', 'LIKE', "%{$keyword}%")
+    //             ->orWhere('status', 'LIKE', "%{$keyword}%");
+    //     });
+    // }
 
     // Method untuk menentukan ikon berdasarkan bentuk sekolah
     public function getIconAttribute()
