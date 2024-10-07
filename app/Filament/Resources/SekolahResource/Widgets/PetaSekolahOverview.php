@@ -41,8 +41,8 @@ class PetaSekolahOverview extends Widget
         // Iterasi melalui setiap sekolah
         foreach ($sekolah as $index => $item) {
             // Ambil data meta dan koordinat dari sekolah
-            $meta = json_decode($item->meta);
-            $coordinates = [(float) $meta->lon, (float) $meta->lat];
+            $meta = $item->meta;
+            $coordinates = [$meta['lon'], $meta['lat']];
 
             // Tentukan nama file ikon berdasarkan bentuk sekolah
             $iconFileName = 'school-' . strtolower($item->bentuk->code) . '.png';

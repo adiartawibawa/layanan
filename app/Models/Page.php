@@ -73,6 +73,16 @@ class Page extends Model implements HasMedia
         'meta' => 'array',
     ];
 
+    public function getDisplayableAttribute()
+    {
+        return $this->title;
+    }
+
+    public function getFriendlyModelName()
+    {
+        return 'Halaman';
+    }
+
     /**
      * Return the sluggable configuration array for this model.
      *

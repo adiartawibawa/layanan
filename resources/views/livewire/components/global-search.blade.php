@@ -18,31 +18,26 @@
     </span>
 
     <!-- Display search results. -->
-    <div class="overflow-auto max-h-[35vh] sm:rounded-md shadow-md">
-        <ul role="list" class="divide-y divide-gray-100 bg-white px-4">
+    <div id="scrollableDiv" class="overflow-auto max-h-[25vh] sm:rounded-md shadow-md"
+        wire:scroll.debounce.500ms="loadMore">
+        <ul role="list" class="divide-y divide-gray-100 bg-white">
             @if (!empty($results))
                 @foreach ($results as $model => $records)
-                    @if ($records->isNotEmpty())
+                    @if (count($records) > 0)
                         @foreach ($records as $record)
-                            @dd($record)
-                            <li class="flex justify-between gap-x-6 py-5">
+                            <li
+                                class="flex justify-between gap-x-6 py-5 px-4 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white">
                                 <div class="flex min-w-0 gap-x-4">
-                                    <img class="h-12 w-12 flex-none rounded-full bg-gray-50"
-                                        src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                                        alt="">
                                     <div class="min-w-0 flex-auto">
                                         <p class="text-sm font-semibold leading-6 text-gray-900">
-                                            {{ $record->name ?? ($record->title ?? 'Unknown') }}</p>
-                                        <p class="mt-1 truncate text-xs leading-5 text-gray-500">
-                                            on {{ class_basename($model) }}
+                                            {{ $record->getDisplayableAttribute() ?? 'Unknown' }}
                                         </p>
                                     </div>
                                 </div>
                                 <div class="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
-                                    <p class="text-sm leading-6 text-gray-900">Co-Founder / CEO</p>
-                                    <p class="mt-1 text-xs leading-5 text-gray-500">Last seen <time
-                                            datetime="2023-01-23T13:23Z">3h
-                                            ago</time></p>
+                                    <p class="text-sm leading-6 text-gray-900">on
+                                        {{ (new $model())->getFriendlyModelName() }}</p>
+                                    </p>
                                 </div>
                             </li>
                         @endforeach
@@ -50,26 +45,16 @@
                 @endforeach
             @endif
         </ul>
-    </div>
-    {{-- <ul>
-        @if (!empty($results))
-            @foreach ($results as $model => $records)
-                <!-- Display model name dynamically as section title -->
-                <li><strong>{{ class_basename($model) }}:</strong></li>
-                @if ($records->isNotEmpty())
-                    <!-- Loop through the records dynamically -->
-                    @foreach ($records as $record)
-                        <!-- Display record's first available attribute dynamically -->
-                        <li>{{ $record->name ?? ($record->title ?? 'Unknown') }}</li>
-                    @endforeach
-                @else
-                    <!-- Message if no records found for a particular model -->
-                    <li>No results found for {{ class_basename($model) }}</li>
-                @endif
-            @endforeach
-        @else
-            <!-- Display a message when no results are found. -->
-            <li>No results found</li>
+
+        <!-- Show loading spinner or message when loading more results -->
+        <div wire:loading>
+            <p class="text-center py-4">Loading more results...</p>
+        </div>
+
+        <!-- Show end of records message when no more results and results have been fetched -->
+        @if (empty($results) && $this->allModelsExhausted())
+            <p class="text-center py-4">No more results to display.</p>
         @endif
-    </ul> --}}
+
+    </div>
 </div>

@@ -9,6 +9,8 @@ use App\Livewire\Permohonan\EditPermohonan;
 use App\Livewire\Permohonan\ListPermohonan;
 use App\Livewire\Posts\AllPosts;
 use App\Livewire\Posts\DetailPosts;
+use App\Livewire\Sekolah\DetailSekolah;
+use App\Livewire\Sekolah\PetaSekolah;
 use App\Livewire\Welcome\DetailService;
 use App\Livewire\Welcome\TestimonialForm;
 use App\Models\Layanan;
@@ -37,6 +39,9 @@ Route::prefix('berita')->name('berita.')->group(function () {
 Route::get('/testimonial', TestimonialForm::class)->name('testimonial.create');
 
 Route::get('/layanan/{slug}', DetailService::class)->name('layanan.detail');
+
+Route::get('/sekolah/peta', PetaSekolah::class)->name('sekolah.map');
+Route::get('/sekolah/{npsn}/detail', DetailSekolah::class)->name('sekolah.detail');
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/dashboard', function () {

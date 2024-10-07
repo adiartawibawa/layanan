@@ -45,12 +45,12 @@
 
                     // Define colors for different regions (kecamatan)
                     var kecamatanColors = {
-                        "KUTA SELATAN": "#FF5733",
-                        "KUTA": "#33FF57",
-                        "KUTA UTARA": "#3357FF",
-                        "MENGWI": "#FF33A1",
-                        "ABIANSEMAL": "#FF8C33",
-                        "PETANG": "#33FFF5"
+                        "KUTA SELATAN": "#1fdce5",
+                        "KUTA": "#37e7d3",
+                        "KUTA UTARA": "#66f0bb",
+                        "MENGWI": "#96f69f",
+                        "ABIANSEMAL": "#c7f984",
+                        "PETANG": "#f9f871"
                     };
 
                     // Add regions (features) to the map using GeoJSON data
@@ -67,11 +67,20 @@
                         .on("mouseover", function(event, d) {
                             d3.select(this).transition().duration(300).attr("fill",
                                 "#FF0000"); // Highlight on hover
+                            // Display floating region info
+                            infoText.style("display", "block")
+                                .text(
+                                    `Desa: ${d.properties.desa_name}, Kecamatan: ${d.properties.kecamatan_name}`
+                                )
+                                .attr("x", event.pageX) // Posisi info text sesuai dengan posisi mouse
+                                .attr("y", event.pageY - 10); // Sedikit di atas mouse
                         })
                         .on("mouseout", function(event, d) {
                             d3.select(this).transition().duration(300).attr("fill", d =>
                                 kecamatanColors[d.properties.kecamatan_name] || "#088"
                             ); // Reset color on mouse out
+                            // Sembunyikan floating info
+                            infoText.style("display", "none");
                         });
 
                     // Define zoom behavior and call it on the SVG
@@ -89,7 +98,7 @@
                                 d3.zoomIdentity, // Reset zoom
                                 d3.zoomTransform(svg.node()).invert([width / 2, height / 2])
                             );
-                            d3.selectAll("circle").remove(); // Remove all points
+                            d3.selectAll("image").remove(); // Remove all points
                             active = null;
 
                             // Hide the floating info text
@@ -155,39 +164,48 @@
                         var points = JSON.parse(event); // Parse the points data
                         var pointsLayer = g.append("g"); // Add a new group for points
 
-                        pointsLayer.selectAll("circle").remove(); // Remove existing points
-                        pointsLayer.selectAll("circle")
+                        pointsLayer.selectAll("image").remove(); // Remove existing points (if any)
+                        pointsLayer.selectAll("image")
                             .data(points.features)
-                            .enter().append("circle")
-                            .attr("cx", function(d) {
+                            .enter().append("image")
+                            .attr("xlink:href", function(d) {
+                                // Ambil URL ikon berdasarkan bentuk sekolah
+                                return "{{ asset('icon/school-' . strtolower(':bentuk_code') . '.png') }}"
+                                    .replace(':bentuk_code', d.properties.bentuk_code
+                                        .toLowerCase());
+                            })
+                            .attr("x", function(d) {
                                 return projection([d.geometry.coordinates[0], d.geometry
                                     .coordinates[1]
-                                ])[0];
+                                ])[0] - 6;
                             })
-                            .attr("cy", function(d) {
+                            .attr("y", function(d) {
                                 return projection([d.geometry.coordinates[0], d.geometry
                                     .coordinates[1]
-                                ])[1];
+                                ])[1] - 6;
                             })
-                            .attr("r", 1)
-                            .attr("fill", "blue")
+                            .attr("width", 6) // Sesuaikan ukuran ikon
+                            .attr("height", 6) // Sesuaikan ukuran ikon
                             .attr("cursor", "pointer") // Change cursor to hand on hover
                             .on("mouseover", function(event, d) {
                                 d3.select(this)
                                     .transition()
                                     .duration(200)
-                                    .attr("r", 2) // Enlarge point on hover
-                                    .attr("fill", "orange"); // Change color on hover
+                                    .attr("width", 12) // Perbesar ikon pada hover
+                                    .attr("height", 12); // Perbesar ikon pada hover
                             })
                             .on("mouseout", function(event, d) {
                                 d3.select(this)
                                     .transition()
                                     .duration(200)
-                                    .attr("r", 1) // Restore original size
-                                    .attr("fill", "blue"); // Restore original color
+                                    .attr("width", 6) // Kembalikan ukuran ikon semula
+                                    .attr("height", 6); // Kembalikan ukuran ikon semula
                             })
                             .on("click", function(event, d) {
-                                showPointPopup(event, d.properties);
+                                console.log(d);
+
+                                showPointPopup(event, d
+                                    .properties); // Panggil fungsi untuk menampilkan popup
                             });
                     });
 
@@ -207,17 +225,40 @@
                             .style("border-radius", "5px");
 
                         // Add content to the popup
-                        popup.append("h4").text("Informasi Sekolah");
-                        popup.append("p").text(`Nama: ${properties.name}`);
-                        popup.append("p").text(`Bentuk: ${properties.bentuk}`);
-                        popup.append("p").text(`Jumlah Pegawai: ${properties.pegawai_count}`);
+                        popup.append("h4")
+                            .attr("class", "font-bold text-lg mb-2 text-gray-800")
+                            .text("Informasi Sekolah");
+                        popup.append("p")
+                            .attr("class", "text-sm text-gray-700 mb-1")
+                            .text(`Nama: ${properties.nama}`);
+                        popup.append("p")
+                            .attr("class", "text-sm text-gray-700 mb-1")
+                            .text(`Bentuk: ${properties.bentuk}`);
+                        popup.append("p")
+                            .attr("class", "text-sm text-gray-700 mb-4")
+                            .text(`Jumlah Pegawai: ${properties.pegawai_count}`);
 
-                        // Add close button
+                        // Add a detail link button
+                        popup.append("a")
+                            .attr("href",
+                                `/sekolah/${properties.npsn}/detail`
+                            ) // Link to the detail page using the `npsn`
+                            .attr("class",
+                                "inline-block bg-blue-500 text-white font-semibold py-1 px-2 rounded hover:bg-blue-600 transition duration-300"
+                            )
+                            .attr("target", '_blank')
+                            .text("View Details");
+
+                        // Add close button with Tailwind styling
                         popup.append("button")
+                            .attr("class",
+                                "ml-4 inline-block bg-primary text-white font-semibold py-1 px-2 rounded hover:bg-red-600 transition duration-300"
+                            )
                             .text("Close")
                             .on("click", function() {
                                 d3.select("#info-popup").remove(); // Close the popup on click
                             });
+
                     }
 
                     // Zoom handler function
