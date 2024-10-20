@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Concerns\Searchable;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class Desa extends Model
 {
     use Sluggable;
+    use Searchable;
 
     protected $fillable = ['code', 'kecamatan_code', 'name', 'meta'];
 
@@ -82,5 +84,12 @@ class Desa extends Model
             'fill' => $colorMap[ucwords(strtolower($this->kecamatan->name ?? ''))] ?? '#364b44',
             'fill-opacity' => 0.6,
         ];
+    }
+
+    // Definisikan accessor untuk properti meta
+    public function getMetaAttribute($value)
+    {
+        // Pastikan value tidak null dan lakukan decode JSON
+        return $value ? json_decode($value, true) : null;
     }
 }
