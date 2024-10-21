@@ -10,11 +10,6 @@
         <livewire:maps.leaf.l-geo-json name="Sekolah" model="Sekolah" :searchable=true
             searchableFields="['nama', 'alamat']" :is-point=true geojson="{{ $sekolahGeoJsonUrl }}" />
 
-        {{-- <livewire:maps.base-map class="absolute inset-0" height="100vh" width="100%">
-        <livewire:maps.geo-json-viewer geo-json-url="{{ $sekolahGeoJsonUrl }}" is-point=true
-            layerId="sekolahGeoJsonLayer" />
-        <livewire:maps.geo-json-viewer geo-json-url="{{ $wilayahGeoJsonUrl }}" layerId="wilayahGeoJsonLayer" />
-    </livewire:maps.base-map> --}}
         <!-- Floating Menu -->
         <div class="absolute top-3 right-4 flex flex-col space-y-1 z-[500]">
 
@@ -58,10 +53,9 @@
             x-transition:leave-end="translate-x-full"
             class="fixed top-16 right-0 py-8 w-80 h-screen bg-white shadow-lg z-[500] p-4 overflow-y-auto">
             <h2 class="text-lg font-semibold mb-4">Search</h2>
-            {{-- <livewire:maps.geo-json-search /> --}}
+
             <livewire:maps.leaf.l-map-search />
-            {{-- <input type="text" placeholder="Search location..."
-        class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" /> --}}
+
             <button @click="showSearch = false"
                 class="mt-4 mb-14 p-2 bg-red-500 text-white rounded-lg w-full">Close</button>
         </div>
@@ -73,18 +67,9 @@
             x-transition:leave="transform transition ease-in-out duration-300" x-transition:leave-start="translate-x-0"
             x-transition:leave-end="translate-x-full"
             class="fixed top-16 right-0 py-8 w-80 h-screen bg-white shadow-lg z-[500] p-4 overflow-y-auto">
-            <h2 class="text-lg font-semibold mb-4">Map Layer</h2>
-            <ul class="space-y-2">
-                <li class="flex items-center">
-                    <span class="inline-block w-4 h-4 bg-blue-500 rounded-full mr-2"></span> Point of Interest
-                </li>
-                <li class="flex items-center">
-                    <span class="inline-block w-4 h-4 bg-green-500 rounded-full mr-2"></span> Parks
-                </li>
-                <li class="flex items-center">
-                    <span class="inline-block w-4 h-4 bg-red-500 rounded-full mr-2"></span> Schools
-                </li>
-            </ul>
+
+            <livewire:maps.leaf.l-legend />
+
             <button @click="showLayer = false" class="mt-4 p-2 bg-red-500 text-white rounded-lg w-full">Close</button>
         </div>
 
