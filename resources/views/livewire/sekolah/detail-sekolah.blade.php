@@ -10,16 +10,16 @@
     <div class="w-full flex flex-col md:flex-row gap-4">
         <div class="shadow-md w-full md:w-1/3 h-max rounded-lg">
             {{-- Map goes here --}}
-            <livewire:maps.base-map height="350px" width="100%">
-                <livewire:maps.point readOnly="true" latitude="{{ $sekolah->meta['lat'] }}"
-                    longitude="{{ $sekolah->meta['lon'] }}" layerId="pointsLayer"
+            <livewire:maps.leaf.l-map-container height="350px" width="100%">
+                <livewire:maps.leaf.l-point readOnly="true" latitude="{{ $sekolah->meta['lat'] }}"
+                    longitude="{{ $sekolah->meta['lon'] }}"
                     iconUrl="{{ asset('icon/school-' . strtolower($sekolah->bentuk->code) . '.png') }}" />
-            </livewire:maps.base-map>
+            </livewire:maps.leaf.l-map-container>
         </div>
         <div class="w-full p-4 mb-6 rounded-lg shadow-md bg-white dark:text-white dark:bg-dark md:w-2/3">
             {{-- Detail Information goes here --}}
             <!-- Starts component -->
-            <div x-data="{ activeTab: 2 }" class="mx-auto w-full mt-6">
+            <div x-data="{ activeTab: 0 }" class="mx-auto w-full mt-6">
                 <!-- Tab List -->
                 <ul role="tablist" class="-mb-px flex items-stretch gap-2 text-slate-500">
                     <!-- Tab 1 -->
