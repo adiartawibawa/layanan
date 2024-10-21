@@ -6,6 +6,10 @@
     <script>
         let geojsonUrl = @js($geojson);
         let isPoint = @js($isPoint);
+        let name = @js($name);
+
+        // Objek penyimpan layer GeoJSON
+        let layers = {};
 
         if (!window.leafletMap) {
             console.error('Peta belum diinisialisasi.');
@@ -20,10 +24,6 @@
 
         /**
          * Ambil data GeoJSON dari URL yang diberikan dan tambahkan ke peta
-         * @param {string} geoJsonUrl - URL untuk GeoJSON
-         * @param {boolean} isPoint - Apakah GeoJSON berupa point atau bukan
-         * @param {object} map - Objek peta dari Leaflet
-         * @param {object} markerClusterGroup - Cluster untuk marker jika isPoint true
          */
         function fetchGeoJsonData(geoJsonUrl, isPoint, map, markerClusterGroup) {
             fetch(geoJsonUrl)
@@ -32,30 +32,32 @@
                     return response.json();
                 })
                 .then(geoJsonData => {
-                    // Buat layer GeoJSON dengan opsi yang sesuai
+                    // Gunakan parameter 'name' dari masing-masing komponen jika ada
                     const geoJsonLayer = L.geoJSON(geoJsonData, buildGeoJsonOptions(isPoint, markerClusterGroup));
 
+                    // Simpan layer dengan menggunakan 'name' yang di-push dari Livewire
+                    const layerName = name || geoJsonData.name || 'Layer ' + Object.keys(layers).length;
+                    layers[layerName] = geoJsonLayer;
+
                     if (isPoint) {
-                        // Jika data adalah Point, tambahkan ke MarkerClusterGroup
                         markerClusterGroup.addLayer(geoJsonLayer);
-                        map.addLayer(markerClusterGroup); // Tambahkan cluster ke peta
-                        map.fitBounds(markerClusterGroup.getBounds()); // Sesuaikan bounds dengan cluster
+                        map.addLayer(markerClusterGroup);
+                        map.fitBounds(markerClusterGroup.getBounds());
                     } else {
-                        geoJsonLayer.addTo(map); // Untuk data non-Point, tambahkan langsung ke peta
-                        map.fitBounds(geoJsonLayer.getBounds()); // Sesuaikan bounds dengan layer non-Point
+                        geoJsonLayer.addTo(map);
+                        map.fitBounds(geoJsonLayer.getBounds());
                     }
 
+                    console.log("Layer ditambahkan:", layerName);
                     $wire.dispatchSelf('loadLayerData');
+                    $wire.dispatch('layerAdded', {
+                        name: layerName
+                    });
                 })
                 .catch(error => console.error("Gagal memuat GeoJSON:", error));
         }
 
-        /**
-         * Tentukan opsi untuk GeoJSON layer
-         * @param {boolean} isPoint - Apakah data GeoJSON berisi point
-         * @param {object} markerClusterGroup - Cluster untuk marker jika isPoint true
-         * @returns {object} - Opsi GeoJSON
-         */
+
         function buildGeoJsonOptions(isPoint, markerClusterGroup) {
             const geoJsonOptions = {};
 
@@ -66,12 +68,8 @@
             }
 
             geoJsonOptions.onEachFeature = (feature, layer) => {
-                if (feature.properties && feature.properties.nama) {
-                    layer.bindPopup(`<strong>${feature.properties.nama}</strong>`);
-                }
-
+                layer.bindPopup(`<strong>${feature.properties?.nama ?? feature.properties?.desa_name}</strong>`);
                 if (isPoint && feature.geometry.type === 'Point') {
-                    // Jika data point, tambahkan ke MarkerClusterGroup
                     markerClusterGroup.addLayer(layer);
                 }
             };
@@ -79,12 +77,6 @@
             return geoJsonOptions;
         }
 
-        /**
-         * Buat marker kustom jika ada ikon, atau kembalikan marker default
-         * @param {object} feature - Fitur GeoJSON
-         * @param {object} latlng - LatLng dari fitur GeoJSON
-         * @returns {object} - Leaflet marker
-         */
         function createCustomMarker(feature, latlng) {
             if (feature.styles && feature.styles.icon) {
                 const customIcon = L.icon({
@@ -96,14 +88,9 @@
                     icon: customIcon
                 });
             }
-            return L.marker(latlng); // Default marker
+            return L.marker(latlng); // Marker default
         }
 
-        /**
-         * Tentukan style untuk fitur GeoJSON
-         * @param {object} feature - Fitur GeoJSON
-         * @returns {object} - Style untuk GeoJSON
-         */
         function getFeatureStyle(feature) {
             const s = feature.styles || {};
             return {
@@ -117,16 +104,59 @@
         }
 
         /**
-         * Dapatkan atau buat MarkerClusterGroup jika belum ada
-         * @returns {object} - MarkerClusterGroup
+         * Fungsi untuk menampilkan atau menyembunyikan layer
          */
-        function getMarkerClusterGroup() {
-            if (!window.leafletMap.markerClusterGroup) {
-                window.leafletMap.markerClusterGroup = L.markerClusterGroup();
-                window.leafletMap.addLayer(window.leafletMap.markerClusterGroup);
+        function toggleLayerVisibility(layerName, visible) {
+            const layer = layers[layerName];
+            if (layer) {
+                if (visible) {
+                    // Show layer
+                    if (isPoint) {
+                        // Jika marker cluster belum ada di peta, tambahkan kembali
+                        if (!window.leafletMap.hasLayer(markerClusterGroup)) {
+                            window.leafletMap.addLayer(markerClusterGroup);
+                            markerClusterGroup.addLayer(layer); // Tambahkan kembali layer ke cluster
+                        }
+                    } else {
+                        if (!window.leafletMap.hasLayer(layer)) {
+                            window.leafletMap.addLayer(layer);
+                        }
+                    }
+                    console.log("Layer ditampilkan:", layerName);
+                } else {
+                    // Hide layer
+                    if (isPoint) {
+                        // Hapus layer point dari MarkerClusterGroup
+                        if (window.leafletMap.hasLayer(markerClusterGroup)) {
+                            markerClusterGroup.removeLayer(layer); // Hapus layer dari cluster
+                            window.leafletMap.removeLayer(markerClusterGroup);
+                        }
+                    } else {
+                        if (window.leafletMap.hasLayer(layer)) {
+                            window.leafletMap.removeLayer(layer);
+                        }
+                    }
+                    console.log("Layer disembunyikan:", layerName);
+                }
+            } else {
+                console.error(`Layer dengan nama ${layerName} tidak ditemukan.`);
             }
-            return window.leafletMap.markerClusterGroup;
         }
+
+        $wire.on('toggleLayer', (event) => {
+            console.log("Event toggleLayer diterima:", event);
+
+            const {
+                layerName,
+                visible
+            } = event;
+
+            if (typeof toggleLayerVisibility === 'function') {
+                toggleLayerVisibility(layerName, visible);
+            } else {
+                console.error('toggleLayerVisibility is not a function');
+            }
+        });
     </script>
 @endscript
 

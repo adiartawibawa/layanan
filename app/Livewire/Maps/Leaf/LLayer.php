@@ -5,7 +5,7 @@ namespace App\Livewire\Maps\Leaf;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-class LLegend extends Component
+class LLayer extends Component
 {
     public $layers = [];
 
@@ -31,13 +31,11 @@ class LLegend extends Component
                 $layer['visible'] = !$layer['visible'];
 
                 // Dispatch event to toggle the layer visibility on the map
-                $this->dispatch('toggleLayerVisibility', [
-                    'geojsonUrl' => $name, // Mengirim URL atau nama GeoJSON sebagai key identifikasi
-                    'visible' => $layer['visible']
-                ]);
-
-                // Debug: Lihat apa yang terjadi saat layer di-toggle
-                logger()->info("Toggling layer {$name}, visibility: " . $layer['visible']);
+                $this->dispatch(
+                    'toggleLayerVisibility',
+                    name: $layer['name'],
+                    visible: $layer['visible']
+                );
 
                 break;
             }
@@ -46,6 +44,6 @@ class LLegend extends Component
 
     public function render()
     {
-        return view('livewire.maps.leaf.l-legend', ['layers' => $this->layers]);
+        return view('livewire.maps.leaf.l-layer', ['layers' => $this->layers]);
     }
 }

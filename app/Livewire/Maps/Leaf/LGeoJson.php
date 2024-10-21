@@ -27,18 +27,24 @@ class LGeoJson extends Component
     #[On('loadLayerData')]
     public function loadLayerData()
     {
-        // Emit the data for other components to consume
-        // $this->dispatch('geojsonDataLoaded', [
-        //     'data' => $this->geojson,
-        //     'searchable' => $this->searchable,
-        //     'searchableFields' => $this->searchableFields,
-        // ]);
 
         $this->dispatch('layerDataLoaded', [
             'model' => $this->model,
             'searchable' => $this->searchable,
-            // 'searchableFields' => $this->searchableFields,
         ]);
+    }
+
+    #[On('toggleLayerVisibility')]
+    public function handleToggleLayerVisibility($name, $visible)
+    {
+        if ($this->name === $name) {
+
+            $this->dispatch(
+                'toggleLayer',
+                layerName: $this->name,
+                visible: $visible
+            );
+        }
     }
 
     public function render()

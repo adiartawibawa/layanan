@@ -68,7 +68,7 @@
             x-transition:leave-end="translate-x-full"
             class="fixed top-16 right-0 py-8 w-80 h-screen bg-white shadow-lg z-[500] p-4 overflow-y-auto">
 
-            <livewire:maps.leaf.l-legend />
+            <livewire:maps.leaf.l-layer />
 
             <button @click="showLayer = false" class="mt-4 p-2 bg-red-500 text-white rounded-lg w-full">Close</button>
         </div>
