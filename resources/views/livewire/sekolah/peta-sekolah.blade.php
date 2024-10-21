@@ -4,11 +4,11 @@
     <!-- Base Map Component -->
     <livewire:maps.leaf.l-map-container height='100vh'>
 
-        <livewire:maps.leaf.l-geo-json name="Wilayah" model="Desa" :searchable=true searchableFields="['slug']"
-            geojson="{{ $wilayahGeoJsonUrl }}" />
+        <livewire:maps.leaf.l-geo-json name="Wilayah" model="Desa" :searchable=true searchableFields="['name']"
+            :is-point=false geojson="{{ $wilayahGeoJsonUrl }}" />
 
         <livewire:maps.leaf.l-geo-json name="Sekolah" model="Sekolah" :searchable=true
-            searchableFields="['nama', 'alamat']" geojson="{{ $sekolahGeoJsonUrl }}" />
+            searchableFields="['nama', 'alamat']" :is-point=true geojson="{{ $sekolahGeoJsonUrl }}" />
 
         {{-- <livewire:maps.base-map class="absolute inset-0" height="100vh" width="100%">
         <livewire:maps.geo-json-viewer geo-json-url="{{ $sekolahGeoJsonUrl }}" is-point=true

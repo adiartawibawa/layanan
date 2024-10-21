@@ -12,12 +12,14 @@ class LGeoJson extends Component
     public $model;
     public $searchable;
     public $searchableFields;
+    public $isPoint;
 
-    public function mount($geojson, $name, $model, $searchable = false, $searchableFields = [])
+    public function mount($geojson, $name, $model, $isPoint = false, $searchable = false, $searchableFields = [])
     {
         $this->geojson = $geojson;
         $this->name = $name;
         $this->model = $model;
+        $this->isPoint = $isPoint;
         $this->searchable = $searchable;
         $this->searchableFields = $searchableFields;
     }
