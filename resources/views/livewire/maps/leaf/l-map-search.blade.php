@@ -35,12 +35,13 @@
                 @foreach ($searchResult as $result)
                     <div class="flex w-full max-w-full overflow-hidden bg-white dark:bg-gray-800 rounded-md mt-4 hover:cursor-pointer"
                         wire:click="$dispatch('zoomTo', { lat: {{ $result->meta['lat'] }}, lng: {{ $result->meta['lon'] }} })">
-                        <div class="w-1/4 bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
+                        <div class="w-1/4 bg-gray-200 dark:bg-gray-600 flex items-center justify-center">
                             @if (!empty($result->icon))
-                                <img class="object-cover" src="{{ $result->icon }}" alt="{{ $result->nama }}">
+                                <img class="object-cover shadow-inner" src="{{ $result->icon }}"
+                                    alt="{{ $result->nama }}">
                                 {{-- @endif --}}
                             @elseif (!empty($result->meta['geometry']))
-                                <livewire:maps.map-thumbnail :meta="$result->meta" />
+                                <livewire:maps.map-thumbnail :id="$result->id" :meta="$result->meta" />
                             @endif
                         </div>
                         <div class="w-3/4 pt-4 pl-4 pb-4 pr-0">
@@ -72,22 +73,22 @@
             }
 
             function zoomTo(latitude, longitude) {
-                mapContainer.setView(new L.LatLng(latitude, longitude));
-                mapContainer.setZoom(18);
+                if (latitude && longitude) {
+                    mapContainer.setView(new L.LatLng(latitude, longitude));
+                    mapContainer.setZoom(18);
+                } else {
+                    console.error('Koordinat tidak valid:', latitude, longitude);
+                }
             }
 
             $wire.on('zoomTo', (event) => {
                 // Pastikan detail ada dan bukan undefined
-                if (event) {
-                    const {
-                        lat,
-                        lng
-                    } = event; // Mengambil lat dan lng dari event
-                    zoomTo(lat, lng); // Memanggil fungsi zoomTo dengan lat dan lng
+                if (event && event.lat && event.lng) {
+                    zoomTo(event.lat, event.lng); // Memanggil fungsi zoomTo dengan lat dan lng
                 } else {
-                    console.error('event tidak tersedia:', event);
+                    console.error('Event tidak tersedia atau koordinat tidak valid:', event);
                 }
-            })
+            });
         </script>
     @endscript
 </div>

@@ -7,10 +7,12 @@ use Livewire\Component;
 class MapThumbnail extends Component
 {
     public $meta;
+    public $id;
 
-    public function mount($meta)
+    public function mount($meta, $id)
     {
         $this->meta = $meta;
+        $this->id = $id;
     }
 
     public function render()
