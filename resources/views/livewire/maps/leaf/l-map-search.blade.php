@@ -33,7 +33,8 @@
         @if (!empty($searchResults))
             @foreach ($searchResults as $searchResult)
                 @foreach ($searchResult as $result)
-                    <div class="flex w-full max-w-full overflow-hidden bg-white dark:bg-gray-800 rounded-md mt-4">
+                    <div class="flex w-full max-w-full overflow-hidden bg-white dark:bg-gray-800 rounded-md mt-4 hover:cursor-pointer"
+                        wire:click="$dispatch('zoomTo', { lat: {{ $result->meta['lat'] }}, lng: {{ $result->meta['lon'] }} })">
                         <div class="w-1/4 bg-gray-300 dark:bg-gray-600 flex items-center justify-center">
                             @if (!empty($result->icon))
                                 <img class="object-cover" src="{{ $result->icon }}" alt="{{ $result->nama }}">
@@ -60,4 +61,33 @@
             @endif
         @endif
     </div>
+
+    @script
+        <script>
+            let mapContainer = window.leafletMap;
+
+            if (!mapContainer) {
+                console.error('Peta belum diinisialisasi.');
+                return;
+            }
+
+            function zoomTo(latitude, longitude) {
+                mapContainer.setView(new L.LatLng(latitude, longitude));
+                mapContainer.setZoom(18);
+            }
+
+            $wire.on('zoomTo', (event) => {
+                // Pastikan detail ada dan bukan undefined
+                if (event) {
+                    const {
+                        lat,
+                        lng
+                    } = event; // Mengambil lat dan lng dari event
+                    zoomTo(lat, lng); // Memanggil fungsi zoomTo dengan lat dan lng
+                } else {
+                    console.error('event tidak tersedia:', event);
+                }
+            })
+        </script>
+    @endscript
 </div>
