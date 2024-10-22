@@ -1,11 +1,11 @@
 <div>
     @if (!empty($legendData))
         {{-- @dd($legendData) --}}
-        <div class="legend-container">
+        <div class="legend-container pt-4">
             @foreach ($legendData as $layerName => $items)
                 <div class="layer-group mb-4 p-4 border border-gray-300 rounded relative">
                     <!-- Floating Title -->
-                    <span class="absolute top-[-10px] left-[10px] bg-white px-2 text-sm font-semibold text-gray-600">
+                    <span class="absolute top-[-10px] left-[10px] bg-gray-1 dark:bg-dark px-2 text-sm font-semibold">
                         {{ $layerName }} <!-- Nama Layer -->
                     </span>
 

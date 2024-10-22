@@ -51,13 +51,13 @@
             x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0"
             x-transition:leave="transform transition ease-in-out duration-300" x-transition:leave-start="translate-x-0"
             x-transition:leave-end="translate-x-full"
-            class="fixed top-16 right-0 py-8 w-80 h-screen bg-white shadow-lg z-[500] p-4 overflow-y-auto">
+            class="fixed top-16 right-0 py-8 w-80 h-screen bg-gray-1 dark:bg-dark dark:text-white shadow-lg z-[500] p-4 overflow-y-auto">
             <h2 class="text-lg font-semibold mb-4">Search</h2>
 
             <livewire:maps.leaf.l-map-search />
 
             <button @click="showSearch = false" wire:click="$dispatch('resetQuery')"
-                class="mt-4 mb-14 p-2 bg-red-500 text-white rounded-lg w-full">Close</button>
+                class="mt-4 mb-14 p-2 bg-primary text-white rounded-lg w-full">Close</button>
         </div>
 
         <!-- Layer Drawer -->
@@ -66,12 +66,12 @@
             x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0"
             x-transition:leave="transform transition ease-in-out duration-300" x-transition:leave-start="translate-x-0"
             x-transition:leave-end="translate-x-full"
-            class="fixed top-16 right-0 py-8 w-80 h-screen bg-white shadow-lg z-[500] p-4 overflow-y-auto">
+            class="fixed top-16 right-0 py-8 w-80 h-screen bg-gray-1 dark:bg-dark dark:text-white shadow-lg z-[500] p-4 overflow-y-auto">
 
             <livewire:maps.leaf.l-layer />
 
             <button @click="showLayer = false"
-                class="mt-4 mb-14 p-2 bg-red-500 text-white rounded-lg w-full">Close</button>
+                class="mt-4 mb-14 p-2 bg-primary text-white rounded-lg w-full">Close</button>
         </div>
 
         <!-- Legend Drawer -->
@@ -80,12 +80,12 @@
             x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0"
             x-transition:leave="transform transition ease-in-out duration-300" x-transition:leave-start="translate-x-0"
             x-transition:leave-end="translate-x-full"
-            class="fixed top-16 right-0 py-8 w-80 h-screen bg-white shadow-lg z-[500] p-4 overflow-y-auto">
+            class="fixed top-16 right-0 py-8 w-80 h-screen bg-gray-1 dark:bg-dark dark:text-white shadow-lg z-[500] p-4 overflow-y-auto">
 
             <livewire:maps.legend />
 
             <button @click="showLegend = false"
-                class="mt-4 mb-14 p-2 bg-red-500 text-white rounded-lg w-full">Close</button>
+                class="mt-4 mb-14 p-2 bg-primary text-white rounded-lg w-full">Close</button>
         </div>
 
     </livewire:maps.leaf.l-map-container>
