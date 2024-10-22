@@ -46,7 +46,7 @@
         </div>
 
         <!-- Search Drawer -->
-        <div x-show="showSearch" @click.outside="showSearch = false"
+        <div x-show="showSearch" @click.outside="showSearch = false" wire:click.outside="$dispatch('resetQuery')"
             x-transition:enter="transform transition ease-in-out duration-300"
             x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0"
             x-transition:leave="transform transition ease-in-out duration-300" x-transition:leave-start="translate-x-0"
@@ -56,7 +56,7 @@
 
             <livewire:maps.leaf.l-map-search />
 
-            <button @click="showSearch = false"
+            <button @click="showSearch = false" wire:click="$dispatch('resetQuery')"
                 class="mt-4 mb-14 p-2 bg-red-500 text-white rounded-lg w-full">Close</button>
         </div>
 

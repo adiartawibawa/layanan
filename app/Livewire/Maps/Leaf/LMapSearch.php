@@ -51,6 +51,13 @@ class LMapSearch extends Component
         return $results;
     }
 
+    #[On('resetQuery')]
+    public function resetQuery()
+    {
+        $this->query = '';
+        $this->searchResults = []; // Juga reset hasil pencarian
+    }
+
     public function render()
     {
         return view('livewire.maps.leaf.l-map-search');
