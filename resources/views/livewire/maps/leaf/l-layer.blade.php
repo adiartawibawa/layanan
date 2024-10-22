@@ -7,8 +7,8 @@
                 <input type="checkbox" id="switch-{{ $layer['name'] }}"
                     wire:click="toggleLayerVisibility('{{ $layer['name'] }}')" {{ $layer['visible'] ? 'checked' : '' }}
                     class="sr-only" />
-                <div for="switch-{{ $layer['name'] }}" class="flex w-full items-center cursor-pointer justify-between">
-                    <div>{{ $layer['name'] }}</div>
+                <label for="switch-{{ $layer['name'] }}" class="flex w-full items-center cursor-pointer justify-between">
+                    <span>{{ $layer['name'] }}</span>
                     <div class="relative ml-3">
                         <div
                             class="block w-12 h-6 rounded-full transition-colors
@@ -19,7 +19,7 @@
                                     {{ $layer['visible'] ? 'translate-x-full' : 'translate-x-0' }}">
                         </div>
                     </div>
-                </div>
+                </label>
             </div>
         @endforeach
     </div>
