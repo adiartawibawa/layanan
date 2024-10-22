@@ -4,11 +4,11 @@
     <!-- Base Map Component -->
     <livewire:maps.leaf.l-map-container height='100vh'>
 
-        <livewire:maps.leaf.l-geo-json name="Wilayah" model="Desa" :searchable=true groupedBy="kecamatan_name"
-            legendTitle="kecamatan_name" :is-point=false geojson="{{ $wilayahGeoJsonUrl }}" />
+        <livewire:maps.leaf.l-geo-json name="Wilayah" model="Desa" :searchable=true returnedField="kecamatan_name"
+            groupedBy="kecamatan_name" legendTitle="kecamatan_name" :is-point=false geojson="{{ $wilayahGeoJsonUrl }}" />
 
-        <livewire:maps.leaf.l-geo-json name="Sekolah" model="Sekolah" :searchable=true groupedBy="bentuk_code"
-            legendTitle="bentuk" :is-point=true geojson="{{ $sekolahGeoJsonUrl }}" />
+        <livewire:maps.leaf.l-geo-json name="Sekolah" model="Sekolah" :searchable=true returnedField="bentuk"
+            groupedBy="bentuk_code" legendTitle="bentuk" :is-point=true geojson="{{ $sekolahGeoJsonUrl }}" />
 
         <!-- Floating Menu -->
         <div class="absolute top-3 right-4 flex flex-col space-y-1 z-[500]">
@@ -70,7 +70,8 @@
 
             <livewire:maps.leaf.l-layer />
 
-            <button @click="showLayer = false" class="mt-4 p-2 bg-red-500 text-white rounded-lg w-full">Close</button>
+            <button @click="showLayer = false"
+                class="mt-4 mb-14 p-2 bg-red-500 text-white rounded-lg w-full">Close</button>
         </div>
 
         <!-- Legend Drawer -->
@@ -83,7 +84,8 @@
 
             <livewire:maps.legend />
 
-            <button @click="showLegend = false" class="mt-4 p-2 bg-red-500 text-white rounded-lg w-full">Close</button>
+            <button @click="showLegend = false"
+                class="mt-4 mb-14 p-2 bg-red-500 text-white rounded-lg w-full">Close</button>
         </div>
 
     </livewire:maps.leaf.l-map-container>

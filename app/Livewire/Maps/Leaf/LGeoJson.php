@@ -12,9 +12,10 @@ class LGeoJson extends Component
     public $model;
     public $searchable;
     public $groupedBy;
+    public $returnedField;
     public $isPoint;
 
-    public function mount($geojson, $name, $model, $isPoint = false, $searchable = false, $groupedBy)
+    public function mount($geojson, $name, $model, $isPoint = false, $searchable = false, $groupedBy, $returnedField)
     {
         $this->geojson = $geojson;
         $this->name = $name;
@@ -22,6 +23,7 @@ class LGeoJson extends Component
         $this->isPoint = $isPoint;
         $this->searchable = $searchable;
         $this->groupedBy = $groupedBy;
+        $this->returnedField = $returnedField;
     }
 
     #[On('loadLayerData')]
@@ -32,7 +34,7 @@ class LGeoJson extends Component
             'searchable' => $this->searchable,
         ]);
 
-        $this->dispatch('loadDataLegend', geojson: $this->geojson, name: $this->name, groupedBy: $this->groupedBy);
+        $this->dispatch('loadDataLegend', geojson: $this->geojson, name: $this->name, groupedBy: $this->groupedBy, returnedField: $this->returnedField);
     }
 
     #[On('toggleLayerVisibility')]

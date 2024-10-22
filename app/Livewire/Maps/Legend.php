@@ -10,13 +10,13 @@ class Legend extends Component
     public $legendData = [];
 
     #[On('loadDataLegend')]
-    public function loadData($geojson, $name, $groupedBy, $returnField)
+    public function loadData($geojson, $name, $groupedBy, $returnedField)
     {
         $this->legendData[] = [
             'geojson' => $geojson,
             'name' => $name,
             'groupedBy' => $groupedBy,
-            'returnField' => $returnField,
+            'returnedField' => $returnedField,
         ];
     }
 
