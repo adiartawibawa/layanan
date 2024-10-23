@@ -14,12 +14,11 @@
                         return {
                             {{-- Warna diambil dari properti color dalam geojson --}}
                             fillColor: feature.properties.color,
-                            {{-- Atur opasitas --}}
-                            fillOpacity: 0.5,
-                            {{-- Warna garis tepi --}}
-                            color: feature.properties.color,
-                            {{-- Ketebalan garis tepi --}}
-                            weight: 1,
+                            fillOpacity: 0.6,
+                            opacity: 1.0,
+                            color: '#364b44',
+                            weight: 2,
+                            dashArray: '3',
                         };
                     }
                 }).addTo(map);
