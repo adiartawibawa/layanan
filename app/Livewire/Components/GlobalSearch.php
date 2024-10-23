@@ -94,22 +94,22 @@ class GlobalSearch extends Component
      */
     protected function getSearchableModels()
     {
-        $models = [];
+        return cache()->remember('searchable_models', now()->addHours(24), function () {
+            $models = [];
+            $modelFiles = glob(app_path('Models') . '/*.php');
 
-        // Scan the app/Models directory for all model files.
-        $modelFiles = glob(app_path('Models') . '/*.php');
+            foreach ($modelFiles as $modelFile) {
+                $modelClass = 'App\\Models\\' . basename($modelFile, '.php');
 
-        foreach ($modelFiles as $modelFile) {
-            // Get the full class name of the model.
-            $modelClass = 'App\\Models\\' . basename($modelFile, '.php');
-
-            // Check if the model uses the Searchable trait.
-            if (in_array('App\Concerns\Searchable', class_uses($modelClass))) {
-                $models[] = $modelClass; // Add the model to the list.
+                if (in_array('App\Concerns\Searchable', class_uses($modelClass))) {
+                    if (property_exists($modelClass, 'canBeSearched') && $modelClass::$canBeSearched) {
+                        $models[] = $modelClass;
+                    }
+                }
             }
-        }
 
-        return $models;
+            return $models;
+        });
     }
 
     /**

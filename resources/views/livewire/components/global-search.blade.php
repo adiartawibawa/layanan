@@ -1,7 +1,11 @@
-<div>
+<div class="relative">
+    <!-- Input search -->
     <input type="text" wire:model.live.debounce.300ms="searchQuery"
         placeholder="Silahkan masukan apa yang ingin Anda cari?"
-        class="h-12 w-full rounded-lg pl-11 pr-6 border-primary text-dark-5 duration-300 focus:border-primary focus:ring-0">
+        class="h-12 w-full border-primary text-dark-5 duration-300 focus:border-primary focus:ring-0
+               @if (!empty($results)) rounded-t-lg border-b-0 @else rounded-lg @endif pl-11 pr-6">
+
+    <!-- Icon search -->
     <span class="absolute left-0 top-0 flex h-12 w-12 items-center justify-center text-body-color">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <g clip-path="url(#clip0_1473_9422)">
@@ -17,44 +21,40 @@
         </svg>
     </span>
 
-    <!-- Display search results. -->
-    <div id="scrollableDiv" class="overflow-auto max-h-[25vh] sm:rounded-md shadow-md"
-        wire:scroll.debounce.500ms="loadMore">
-        <ul role="list" class="divide-y divide-gray-100 bg-white">
-            @if (!empty($results))
+    <!-- Display search results -->
+    @if (!empty($results))
+        <div id="scrollableDiv"
+            class="absolute top-full left-0 w-full z-10 bg-white shadow-lg max-h-[150px] overflow-y-auto rounded-b-lg">
+            <ul role="list" class="divide-y divide-gray-100">
                 @foreach ($results as $model => $records)
-                    @if (count($records) > 0)
-                        @foreach ($records as $record)
-                            <li
-                                class="flex justify-between gap-x-6 py-5 px-4 hover:bg-gray-100 dark:hover:bg-gray-700 dark:hover:text-white">
-                                <div class="flex min-w-0 gap-x-4">
-                                    <div class="min-w-0 flex-auto">
-                                        <p class="text-sm font-semibold leading-6 text-gray-900">
-                                            {{ $record->getDisplayableAttribute() ?? 'Unknown' }}
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
-                                    <p class="text-sm leading-6 text-gray-900">on
-                                        {{ (new $model())->getFriendlyModelName() }}</p>
+                    @foreach ($records as $record)
+                        <li
+                            class="flex justify-between gap-x-6 py-3 px-4 bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-white cursor-pointer text-sm">
+                            <div class="flex min-w-0 gap-x-4">
+                                <div class="min-w-0 flex-auto">
+                                    <p class="text-sm font-semibold leading-6 text-gray-900">
+                                        {{ $record->getDisplayableAttribute() ?? 'Unknown' }}
                                     </p>
                                 </div>
-                            </li>
-                        @endforeach
-                    @endif
+                            </div>
+                            <div class="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
+                                <p class="text-sm leading-6 text-gray-900">on
+                                    {{ (new $model())->getFriendlyModelName() }}</p>
+                            </div>
+                        </li>
+                    @endforeach
                 @endforeach
+            </ul>
+
+            <!-- Loading spinner or message -->
+            <div wire:loading>
+                <p class="text-center py-4">Loading more results...</p>
+            </div>
+
+            <!-- End of records message -->
+            @if (empty($results) && $this->allModelsExhausted())
+                <p class="text-center py-4">No more results to display.</p>
             @endif
-        </ul>
-
-        <!-- Show loading spinner or message when loading more results -->
-        <div wire:loading>
-            <p class="text-center py-4">Loading more results...</p>
         </div>
-
-        <!-- Show end of records message when no more results and results have been fetched -->
-        @if (empty($results) && $this->allModelsExhausted())
-            <p class="text-center py-4">No more results to display.</p>
-        @endif
-
-    </div>
+    @endif
 </div>

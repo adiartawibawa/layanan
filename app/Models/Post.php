@@ -38,6 +38,9 @@ class Post extends Model implements HasMedia
 
     protected $fullTextSearchableColumns = ['body'];  // Full-Text Search
 
+    // Model ini diizinkan untuk pencarian global
+    public static $canBeSearched = true;
+
     /**
      * The attributes that aren't mass assignable.
      *
