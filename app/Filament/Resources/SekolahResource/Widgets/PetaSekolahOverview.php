@@ -96,12 +96,12 @@ class PetaSekolahOverview extends Widget
 
         // Tentukan warna untuk setiap kecamatan
         $colors = [
-            'KUTA' => '#E20C0C',
-            'MENGWI' => '#F1006E',
-            'ABIANSEMAL' => '#C62FC5',
-            'PETANG' => '#306DFE',
-            'KUTA SELATAN' => '#008CFF',
-            'KUTA UTARA' => '#0098D5',
+            'KUTA' => '#37e7d3',
+            'MENGWI' => '#96f69f',
+            'ABIANSEMAL' => '#c7f984',
+            'PETANG' => '#f9f871',
+            'KUTA SELATAN' => '#1fdce5',
+            'KUTA UTARA' => '#37e7d3',
         ];
 
         // Inisialisasi array untuk menyimpan fitur-fitur GeoJSON
@@ -115,8 +115,7 @@ class PetaSekolahOverview extends Widget
             // Iterasi melalui setiap desa dalam kecamatan
             foreach ($kecamatan->desas as $desa) {
                 // Ambil data geometri desa dari atribut 'meta'
-                $meta = json_decode($desa->meta, true);
-                $coordinates = $meta['geometry'];
+                $coordinates = $desa->meta['geometry'];
 
                 // Menambahkan properti yang diinginkan ke setiap fitur GeoJSON
                 $properties = [

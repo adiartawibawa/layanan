@@ -69,8 +69,7 @@ class MapHistory extends Model
                     ->get();
 
                 foreach ($desas as $desa) {
-                    $meta = json_decode($desa->meta, true);
-                    $geometry = isset($meta['geometry']) ? $meta['geometry'] : null;
+                    $geometry = isset($desa->meta['geometry']) ? $desa->meta['geometry'] : null;
 
                     if ($geometry !== null) {
                         $features[] = [
