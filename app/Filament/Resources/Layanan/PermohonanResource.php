@@ -5,24 +5,24 @@ namespace App\Filament\Resources\Layanan;
 use App\Filament\Resources\Layanan\PermohonanResource\Pages;
 use App\Filament\Resources\Layanan\PermohonanResource\RelationManagers;
 use App\Models\LayananPermohonan;
-use App\Models\Permohonan;
+use Filament\Actions\Action;
 use Filament\Forms;
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Components\Wizard\Step;
 use Filament\Forms\Form;
-use Filament\Forms\Get;
 use Illuminate\Support\Str;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class PermohonanResource extends Resource
@@ -54,7 +54,8 @@ class PermohonanResource extends Resource
                         ->icon('heroicon-o-document-check')
                         ->description('Formulir permohonan yang diajukan')
                         ->schema(self::makeBlockBuilder('formulir', 'Formulir Layanan'))
-                ])->columnSpanFull(),
+                ])
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -62,6 +63,8 @@ class PermohonanResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('latestHistory.status')
+                    ->label('Status Permohonan'),
                 Tables\Columns\TextColumn::make('id')
                     ->label('ID Permohonan')
                     ->searchable(),
@@ -80,7 +83,7 @@ class PermohonanResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->label('Validasi'),
                 Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
@@ -106,7 +109,7 @@ class PermohonanResource extends Resource
                 ->label($desc)
                 ->blocks([
                     Block::make('string')
-                        ->label(fn (?array $state): string => $state === null ? 'Jawaban Singkat' : ($state['question'] ?? 'Pertanyaan tanpa judul'))
+                        ->label(fn(?array $state): string => $state === null ? 'Jawaban Singkat' : ($state['question'] ?? 'Pertanyaan tanpa judul'))
                         ->icon('heroicon-o-bars-2')
                         ->schema([
                             TextInput::make('content'),
@@ -114,7 +117,7 @@ class PermohonanResource extends Resource
                             Toggle::make('valid')->onColor('success')->onIcon('heroicon-o-check')->offColor('danger')->offIcon('heroicon-o-x-mark')->inline()
                         ])->columns(2),
                     Block::make('textarea')
-                        ->label(fn (?array $state): string => $state === null ? 'Paragraf' : ($state['question'] ?? 'Pertanyaan tanpa judul'))
+                        ->label(fn(?array $state): string => $state === null ? 'Paragraf' : ($state['question'] ?? 'Pertanyaan tanpa judul'))
                         ->icon('heroicon-o-bars-3-bottom-left')
                         ->schema([
                             Textarea::make('content'),
@@ -122,7 +125,7 @@ class PermohonanResource extends Resource
                             Toggle::make('valid')->onColor('success')->onIcon('heroicon-o-check')->offColor('danger')->offIcon('heroicon-o-x-mark')->inline()
                         ])->columns(2),
                     Block::make('datepicker')
-                        ->label(fn (?array $state): string => $state === null ? 'Tanggal' : ($state['question'] ?? 'Pertanyaan tanpa judul'))
+                        ->label(fn(?array $state): string => $state === null ? 'Tanggal' : ($state['question'] ?? 'Pertanyaan tanpa judul'))
                         ->icon('heroicon-o-calendar-days')
                         ->schema([
                             DatePicker::make('content')->label('')->readOnly()->required(),
@@ -130,13 +133,13 @@ class PermohonanResource extends Resource
                             Toggle::make('valid')->onColor('success')->onIcon('heroicon-o-check')->offColor('danger')->offIcon('heroicon-o-x-mark')->inline()
                         ])->columns(2),
                     Block::make('file')
-                        ->label(fn (?array $state): string => $state === null ? 'Upload File' : ($state['question'] ?? 'Pertanyaan tanpa judul'))
+                        ->label(fn(?array $state): string => $state === null ? 'Upload File' : ($state['question'] ?? 'Pertanyaan tanpa judul'))
                         ->icon('heroicon-o-cloud-arrow-up')
                         ->schema([
                             FileUpload::make('content')->label('')
                                 ->directory('permohonan/' . auth()->user()->id)
                                 ->getUploadedFileNameForStorageUsing(
-                                    fn (TemporaryUploadedFile $file): string => (string) str($file->getClientOriginalName())
+                                    fn(TemporaryUploadedFile $file): string => (string) str($file->getClientOriginalName())
                                         ->prepend('document-' . Str::slug(auth()->user()->name) . '-')
                                 )
                                 ->acceptedFileTypes(['application/pdf'])
@@ -147,13 +150,13 @@ class PermohonanResource extends Resource
                             Toggle::make('valid')->onColor('success')->onIcon('heroicon-o-check')->offColor('danger')->offIcon('heroicon-o-x-mark')->inline()
                         ])->columns(2),
                     Block::make('image')
-                        ->label(fn (?array $state): string => $state === null ? 'Upload Gambar' : ($state['question'] ?? 'Pertanyaan tanpa judul'))
+                        ->label(fn(?array $state): string => $state === null ? 'Upload Gambar' : ($state['question'] ?? 'Pertanyaan tanpa judul'))
                         ->icon('heroicon-o-photo')
                         ->schema([
                             FileUpload::make('content')->label('')
                                 ->directory('permohonan/' . auth()->user()->id)
                                 ->getUploadedFileNameForStorageUsing(
-                                    fn (TemporaryUploadedFile $file): string => (string) str($file->getClientOriginalName())
+                                    fn(TemporaryUploadedFile $file): string => (string) str($file->getClientOriginalName())
                                         ->prepend('image-' . Str::slug(auth()->user()->name) . '-')
                                 )
                                 ->image()
