@@ -10,6 +10,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Get;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 
@@ -47,7 +48,7 @@ class EditPermohonan extends EditRecord
                     ->required()
             ])
             ->action(function (array $data) {
-                $this->approved($data['note']);
+                $this->approved($data);
             })
             ->color('success')
             ->keyBindings(['mod+s'])
@@ -69,7 +70,7 @@ class EditPermohonan extends EditRecord
                     ])
                     ->requiresConfirmation()
                     ->action(function (array $data) {
-                        $this->disapproved($data['note']);
+                        $this->disapproved($data);
                     })
                     ->modalIcon('heroicon-o-x-circle')
                     ->color('primary')
@@ -77,8 +78,9 @@ class EditPermohonan extends EditRecord
             ]);
     }
 
-    public function approved($note): void
+    public function approved($data): void
     {
+        $this->record->status = LayananPermohonanHistory::BERHASIL;
         $this->save();
 
         Notification::make()
@@ -88,14 +90,16 @@ class EditPermohonan extends EditRecord
                 'permohonanId' => $this->record->id,
                 'permohonanStatus' => LayananPermohonanHistory::BERHASIL
             ])
-            ->body($note)
+            ->body($data['note'])
             ->send()
             ->sendToDatabase($this->record->user()->firstOrFail());
     }
 
-    public function disapproved($note): void
+    public function disapproved($data): void
     {
+        $this->record->status = LayananPermohonanHistory::DIKEMBALIKAN;
         $this->save();
+
         Notification::make()
             ->title('Berkas permohonan layanan ' . Str::lower($this->record->layanan->slug) . ' telah diperiksa dan perlu ada perbaikan.')
             ->success()
@@ -103,7 +107,7 @@ class EditPermohonan extends EditRecord
                 'permohonanId' => $this->record->id,
                 'permohonanStatus' => LayananPermohonanHistory::DIKEMBALIKAN
             ])
-            ->body($note)
+            ->body($data['note'])
             ->send()
             ->sendToDatabase($this->record->user()->firstOrFail());
     }

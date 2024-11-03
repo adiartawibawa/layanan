@@ -22,7 +22,7 @@ class ListPermohonan extends Component implements HasForms, HasActions
 
     public function mount()
     {
-        $this->datas = LayananPermohonan::with('histories', 'latestHistory')->get();
+        $this->datas = LayananPermohonan::with('histories', 'latestHistory')->orderBy('created_at', 'desc')->get();
     }
 
     public function openModal($id)

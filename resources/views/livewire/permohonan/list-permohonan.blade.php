@@ -62,7 +62,7 @@
                                         @case(\App\Models\LayananPermohonanHistory::BERHASIL)
                                             text-emerald-700
                                             @break
-                                        @case(\App\Models\LayananPermohonanHistory::GAGAL)
+                                        @case(\App\Models\LayananPermohonanHistory::DIBATALKAN)
                                             text-rose-700
                                             @break
                                         @default

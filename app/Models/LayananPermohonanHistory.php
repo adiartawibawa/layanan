@@ -12,7 +12,7 @@ class LayananPermohonanHistory extends Model
     const DIPROSES = 1;
     const DIKEMBALIKAN = 2;
     const BERHASIL = 3;
-    const GAGAL = 4;
+    const DIBATALKAN = 4;
 
     /**
      * The table associated with the model.
@@ -35,14 +35,9 @@ class LayananPermohonanHistory extends Model
         return $this->morphTo('permohonan', 'permohonan_type', 'permohonan_id');
     }
 
-    public function getCreatedAtAttribute($value)
+    public function getCreatedAtMonthAttribute()
     {
-        return Carbon::parse($value)->diffForHumans();
-    }
-
-    public function getCreatedAtMonthAttribute($value)
-    {
-        return Carbon::parse($value)->translatedFormat('F, Y');
+        return Carbon::parse($this->created_at)->translatedFormat('F, Y');
     }
 
     // Accessor untuk mendapatkan teks status berdasarkan nilai konstan
@@ -57,8 +52,8 @@ class LayananPermohonanHistory extends Model
                 return 'Dikembalikan';
             case self::BERHASIL:
                 return 'Berhasil';
-            case self::GAGAL:
-                return 'Gagal';
+            case self::DIBATALKAN:
+                return 'Dibatalkan';
             default:
                 return 'Unknown';
         }

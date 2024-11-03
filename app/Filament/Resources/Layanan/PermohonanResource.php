@@ -63,7 +63,7 @@ class PermohonanResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('latestHistory.status')
+                TextColumn::make('latestHistory.status_label')
                     ->label('Status Permohonan'),
                 Tables\Columns\TextColumn::make('id')
                     ->label('ID Permohonan')
@@ -73,7 +73,6 @@ class PermohonanResource extends Resource
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable(),
-                // ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()

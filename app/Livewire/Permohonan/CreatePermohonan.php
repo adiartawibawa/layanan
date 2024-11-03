@@ -64,7 +64,7 @@ class CreatePermohonan extends Component implements HasForms
         ]);
 
         // Event create PermohonanLayananHistory
-        event(new LayananPermohonanCreated($layananPermohonan)); // Panggil event LayananPermohonanCreated
+        // event(new LayananPermohonanCreated($layananPermohonan)); // Panggil event LayananPermohonanCreated
 
         Notification::make()
             ->title('Ajuan permohonan berhasil.')
@@ -89,7 +89,7 @@ class CreatePermohonan extends Component implements HasForms
                 ->label($desc)
                 ->blocks([
                     Block::make('string')
-                        ->label(fn (?array $state): string => $state === null ? 'Jawaban Singkat' : ($state['question'] ?? 'Pertanyaan tanpa judul'))
+                        ->label(fn(?array $state): string => $state === null ? 'Jawaban Singkat' : ($state['question'] ?? 'Pertanyaan tanpa judul'))
                         ->icon('heroicon-o-bars-2')
                         ->schema([
                             TextInput::make('content')->label('')->helperText(function (Get $get) {
@@ -97,7 +97,7 @@ class CreatePermohonan extends Component implements HasForms
                             })->required(),
                         ]),
                     Block::make('textarea')
-                        ->label(fn (?array $state): string => $state === null ? 'Paragraf' : ($state['question'] ?? 'Pertanyaan tanpa judul'))
+                        ->label(fn(?array $state): string => $state === null ? 'Paragraf' : ($state['question'] ?? 'Pertanyaan tanpa judul'))
                         ->icon('heroicon-o-bars-3-bottom-left')
                         ->schema([
                             Textarea::make('content')->label('')->helperText(function (Get $get) {
@@ -105,7 +105,7 @@ class CreatePermohonan extends Component implements HasForms
                             })->required()->markAsRequired(false),
                         ]),
                     Block::make('datepicker')
-                        ->label(fn (?array $state): string => $state === null ? 'Tanggal' : ($state['question'] ?? 'Pertanyaan tanpa judul'))
+                        ->label(fn(?array $state): string => $state === null ? 'Tanggal' : ($state['question'] ?? 'Pertanyaan tanpa judul'))
                         ->icon('heroicon-o-calendar-days')
                         ->schema([
                             DatePicker::make('content')->label('')->helperText(function (Get $get) {
@@ -113,7 +113,7 @@ class CreatePermohonan extends Component implements HasForms
                             })->required(),
                         ]),
                     Block::make('file')
-                        ->label(fn (?array $state): string => $state === null ? 'Upload File' : ($state['question'] ?? 'Pertanyaan tanpa judul'))
+                        ->label(fn(?array $state): string => $state === null ? 'Upload File' : ($state['question'] ?? 'Pertanyaan tanpa judul'))
                         ->icon('heroicon-o-cloud-arrow-up')
                         ->schema([
                             FileUpload::make('content')->label('')->helperText(function (Get $get) {
@@ -121,14 +121,14 @@ class CreatePermohonan extends Component implements HasForms
                             })
                                 ->directory('permohonan/' . auth()->user()->id)
                                 ->getUploadedFileNameForStorageUsing(
-                                    fn (TemporaryUploadedFile $file): string => (string) str($file->getClientOriginalName())
+                                    fn(TemporaryUploadedFile $file): string => (string) str($file->getClientOriginalName())
                                         ->prepend('document-' . Str::slug(auth()->user()->name) . '-')
                                 )
                                 ->acceptedFileTypes(['application/pdf'])
                                 ->required(),
                         ]),
                     Block::make('image')
-                        ->label(fn (?array $state): string => $state === null ? 'Upload Gambar' : ($state['question'] ?? 'Pertanyaan tanpa judul'))
+                        ->label(fn(?array $state): string => $state === null ? 'Upload Gambar' : ($state['question'] ?? 'Pertanyaan tanpa judul'))
                         ->icon('heroicon-o-photo')
                         ->schema([
                             FileUpload::make('content')->label('')->helperText(function (Get $get) {
@@ -136,7 +136,7 @@ class CreatePermohonan extends Component implements HasForms
                             })
                                 ->directory('permohonan/' . auth()->user()->id)
                                 ->getUploadedFileNameForStorageUsing(
-                                    fn (TemporaryUploadedFile $file): string => (string) str($file->getClientOriginalName())
+                                    fn(TemporaryUploadedFile $file): string => (string) str($file->getClientOriginalName())
                                         ->prepend('image-' . Str::slug(auth()->user()->name) . '-')
                                 )
                                 ->image()
