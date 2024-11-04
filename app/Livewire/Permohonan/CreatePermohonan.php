@@ -63,8 +63,10 @@ class CreatePermohonan extends Component implements HasForms
             'formulir' => $this->form->getState()['formulir']
         ]);
 
-        // Event create PermohonanLayananHistory
-        // event(new LayananPermohonanCreated($layananPermohonan)); // Panggil event LayananPermohonanCreated
+        $this->record->histories()->create([
+            'status' => LayananPermohonanHistory::DIBUAT,
+            'note' => "Permohonan telah diajukan.",
+        ]);
 
         Notification::make()
             ->title('Ajuan permohonan berhasil.')
