@@ -104,7 +104,7 @@
         </div>
     </div>
 
-    {{-- @script
+    @script
         <script>
             document.addEventListener('scroll', () => {
                 const container = document.getElementById('all-notification-container');
@@ -113,6 +113,6 @@
                 }
             });
         </script>
-    @endscript --}}
+    @endscript
 
 </div>

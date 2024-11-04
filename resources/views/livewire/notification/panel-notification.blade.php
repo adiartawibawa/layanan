@@ -22,7 +22,7 @@
         x-transition:leave="transition ease-in duration-100" x-transition:leave-start="opacity-100 scale-100"
         x-transition:leave-end="opacity-0 scale-90"
         class="absolute right-0 z-20 w-64 pt-2 mt-4 overflow-hidden origin-top-right bg-white rounded-md shadow-lg sm:w-80 dark:bg-gray-800">
-        <div class="py-2 flex-1">
+        <div id="notification-container" class="py-2 flex-1 overflow-y-auto max-h-80">
             @if ($notificationsCount === 0)
                 <p class="mx-auto text-sm text-gray-600 dark:text-white">Tidak ada notifikasi baru.</p>
             @else
@@ -59,7 +59,6 @@
                                 @default
                                     Status tidak diketahui
                             @endswitch
-                            {{-- @dd($notification) --}}
                             . {{ $notification['created_at']->diffForHumans() }} .
                             @if (array_key_exists('read_at', $notification) && is_null($notification['read_at']))
                                 <span wire:click.prevent="markAsRead('{{ $notification['id'] }}')"
@@ -88,9 +87,9 @@
 
     @script
         <script>
-            document.addEventListener('scroll', () => {
+            document.getElementById('notification-container').addEventListener('scroll', () => {
                 const container = document.getElementById('notification-container');
-                if (container.getBoundingClientRect().bottom <= window.innerHeight) {
+                if (container.scrollTop + container.clientHeight >= container.scrollHeight) {
                     @this.call('loadNotifications');
                 }
             });
