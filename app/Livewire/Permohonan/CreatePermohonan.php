@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Permohonan;
 
-use App\Events\LayananPermohonanCreated;
 use App\Models\Layanan;
 use App\Models\LayananPermohonan;
 use App\Models\LayananPermohonanHistory;

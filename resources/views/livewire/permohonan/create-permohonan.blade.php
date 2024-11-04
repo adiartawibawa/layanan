@@ -35,7 +35,7 @@
     </x-slot>
 
     <div class="container flex flex-col w-full mx-auto mt-4">
-        {{-- @livewire('permohonan.form-wizard', ['layanan' => $layanan, 'record-id' => null]) --}}
+
         <div class="flex flex-col w-full gap-4">
             <div class="flex flex-row bg-white rounded-md p-4">
                 <form class="w-full" wire:submit="create">
