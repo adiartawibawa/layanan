@@ -5,7 +5,7 @@ namespace App\Filament\Resources\Layanan;
 use App\Filament\Resources\Layanan\PermohonanResource\Pages;
 use App\Filament\Resources\Layanan\PermohonanResource\RelationManagers;
 use App\Models\LayananPermohonan;
-use Filament\Actions\Action;
+use App\Models\LayananPermohonanHistory;
 use Filament\Forms;
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\Builder\Block;
@@ -22,7 +22,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Model;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class PermohonanResource extends Resource
@@ -64,7 +63,7 @@ class PermohonanResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('latestHistory.status_label')
-                    ->label('Status Permohonan'),
+                    ->label('Status'),
                 Tables\Columns\TextColumn::make('id')
                     ->label('ID Permohonan')
                     ->searchable(),
@@ -75,13 +74,22 @@ class PermohonanResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
             ])
             ->filters([
                 //
             ])
             ->actions([
+                Tables\Actions\Action::make('process')
+                    ->icon('heroicon-o-arrow-path')
+                    ->label('Proses')
+                    ->action(function (LayananPermohonan $record) {
+                        $record->histories()->create([
+                            'status' => LayananPermohonanHistory::DIPROSES,
+                            'note' => "Permohonan sedang diproses oleh Admin.",
+                        ]);
+                    })
+                    ->visible(fn(LayananPermohonan $record): bool => $record->latestHistory->status == LayananPermohonanHistory::DIBUAT),
                 Tables\Actions\EditAction::make()->label('Validasi'),
                 Tables\Actions\DeleteAction::make(),
             ])
