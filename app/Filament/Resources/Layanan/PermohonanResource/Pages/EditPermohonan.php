@@ -80,8 +80,12 @@ class EditPermohonan extends EditRecord
 
     public function approved($data): void
     {
-        $this->record->status = LayananPermohonanHistory::BERHASIL;
         $this->save();
+
+        $this->record->histories()->create([
+            'status' => LayananPermohonanHistory::BERHASIL,
+            'note' => "Permohonan telah berhasil diproses. " . $data['note'],
+        ]);
 
         Notification::make()
             ->title('Berkas permohonan layanan ' . Str::lower($this->record->layanan->slug) . ' telah diperiksa dan valid.')
@@ -97,8 +101,12 @@ class EditPermohonan extends EditRecord
 
     public function disapproved($data): void
     {
-        $this->record->status = LayananPermohonanHistory::DIKEMBALIKAN;
         $this->save();
+
+        $this->record->histories()->create([
+            'status' => LayananPermohonanHistory::DIKEMBALIKAN,
+            'note' => "Permohonan dikembalikan: " . $data['note'],
+        ]);
 
         Notification::make()
             ->title('Berkas permohonan layanan ' . Str::lower($this->record->layanan->slug) . ' telah diperiksa dan perlu ada perbaikan.')
