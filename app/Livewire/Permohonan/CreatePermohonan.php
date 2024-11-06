@@ -9,7 +9,6 @@ use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Wizard;
@@ -62,7 +61,7 @@ class CreatePermohonan extends Component implements HasForms
             'formulir' => $this->form->getState()['formulir']
         ]);
 
-        $this->record->histories()->create([
+        $layananPermohonan->histories()->create([
             'status' => LayananPermohonanHistory::DIBUAT,
             'note' => "Permohonan telah diajukan.",
         ]);
@@ -126,6 +125,7 @@ class CreatePermohonan extends Component implements HasForms
                                         ->prepend('document-' . Str::slug(auth()->user()->name) . '-')
                                 )
                                 ->acceptedFileTypes(['application/pdf'])
+                                ->openable()
                                 ->required(),
                         ]),
                     Block::make('image')
@@ -140,7 +140,10 @@ class CreatePermohonan extends Component implements HasForms
                                     fn(TemporaryUploadedFile $file): string => (string) str($file->getClientOriginalName())
                                         ->prepend('image-' . Str::slug(auth()->user()->name) . '-')
                                 )
-                                ->image()
+                                ->imageEditor() // Enable image editor.
+                                ->image() // Restrict file types to images.
+                                ->deletable(true)
+                                ->previewable()
                                 ->required(),
                         ]),
                 ])

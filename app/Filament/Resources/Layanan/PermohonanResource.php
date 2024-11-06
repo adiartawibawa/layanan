@@ -17,6 +17,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Components\Wizard\Step;
 use Filament\Forms\Form;
+use Filament\Notifications\Notification;
 use Illuminate\Support\Str;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -91,6 +92,17 @@ class PermohonanResource extends Resource
                             'status' => LayananPermohonanHistory::DIPROSES,
                             'note' => "Permohonan sedang diproses oleh Admin.",
                         ]);
+
+                        Notification::make()
+                            ->title('Berkas permohonan layanan ' . Str::lower($record->layanan->slug) . ' diproses')
+                            ->success()
+                            ->viewData([
+                                'permohonanId' => $record->id,
+                                'permohonanStatus' => LayananPermohonanHistory::DIPROSES
+                            ])
+                            ->body('Berkas Anda sedang diproses, harap untuk terus memantau notofikasi mengetahui status terkini permohonan Anda.')
+                            ->send()
+                            ->sendToDatabase($record->user()->firstOrFail());
                     })
                     ->visible(fn(LayananPermohonan $record): bool => $record->latestHistory->status == LayananPermohonanHistory::DIBUAT),
                 Tables\Actions\EditAction::make()->label('Validasi'),
