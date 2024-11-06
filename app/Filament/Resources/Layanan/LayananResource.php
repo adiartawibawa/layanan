@@ -52,6 +52,10 @@ class LayananResource extends Resource
                             ->label('Nama layanan')
                             ->required()
                             ->maxLength(255),
+                        Forms\Components\TextInput::make('kode')
+                            ->label('Kode layanan')
+                            ->required()
+                            ->maxLength(10),
                         Forms\Components\TextInput::make('estimasi')
                             ->label('Estimasi waktu')
                             ->required()
@@ -74,21 +78,21 @@ class LayananResource extends Resource
                             ->schema([
                                 FileUpload::make('image_header')
                                     ->getUploadedFileNameForStorageUsing(
-                                        fn (TemporaryUploadedFile $file): string => (string) str($file->getClientOriginalName())
+                                        fn(TemporaryUploadedFile $file): string => (string) str($file->getClientOriginalName())
                                             ->prepend('sampul-'),
                                     )
                                     ->directory('panduan/sampuls/')
                                     ->image()
                                     ->label('Foto Sampul')
-                                    ->required(fn (Page $livewire): bool => $livewire instanceof EditRecord),
+                                    ->required(fn(Page $livewire): bool => $livewire instanceof EditRecord),
                                 TextInput::make('judul')
                                     ->label('Judul Panduan')
-                                    ->required(fn (Page $livewire): bool => $livewire instanceof EditRecord),
+                                    ->required(fn(Page $livewire): bool => $livewire instanceof EditRecord),
                                 RichEditor::make('konten')
                                     ->label('Panduan'),
                                 FileUpload::make('file')
                                     ->getUploadedFileNameForStorageUsing(
-                                        fn (TemporaryUploadedFile $file): string => (string) str($file->getClientOriginalName())
+                                        fn(TemporaryUploadedFile $file): string => (string) str($file->getClientOriginalName())
                                             ->prepend('attachment-'),
                                     )
                                     ->directory('panduan/attachments/')
@@ -106,6 +110,9 @@ class LayananResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('kode')
+                    ->label('Kode Layanan')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('nama')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('estimasi')
@@ -139,7 +146,7 @@ class LayananResource extends Resource
                             ->icon('heroicon-o-document-check')
                             ->schema(self::makeBlockBuilder('formulir', 'Formulir Layanan')),
                     ])
-                    ->fillForm(fn (Layanan $record): array => [
+                    ->fillForm(fn(Layanan $record): array => [
                         'prasyarat' => $record->prasyarat,
                         'formulir' => $record->formulir,
                     ])
@@ -185,7 +192,7 @@ class LayananResource extends Resource
                 ->label($desc)
                 ->blocks([
                     Block::make('string')
-                        ->label(fn (?array $state): string => $state === null ? 'Jawaban Singkat' : ($state['question'] ?? 'Pertanyaan tanpa judul'))
+                        ->label(fn(?array $state): string => $state === null ? 'Jawaban Singkat' : ($state['question'] ?? 'Pertanyaan tanpa judul'))
                         ->icon('heroicon-o-bars-2')
                         ->schema([
                             TextInput::make('question')->label('Pertanyaan jawaban singkat')->live(onBlur: true)->required(),
@@ -196,7 +203,7 @@ class LayananResource extends Resource
                             Hidden::make('valid')
                         ])->columns(2),
                     Block::make('textarea')
-                        ->label(fn (?array $state): string => $state === null ? 'Paragraf' : ($state['question'] ?? 'Pertanyaan tanpa judul'))
+                        ->label(fn(?array $state): string => $state === null ? 'Paragraf' : ($state['question'] ?? 'Pertanyaan tanpa judul'))
                         ->icon('heroicon-o-bars-3-bottom-left')
                         ->schema([
                             TextInput::make('question')->label('Pertanyaan jawaban panjang')->live(onBlur: true)->required(),
@@ -207,7 +214,7 @@ class LayananResource extends Resource
                             Hidden::make('valid')
                         ])->columns(2),
                     Block::make('datepicker')
-                        ->label(fn (?array $state): string => $state === null ? 'Tanggal' : ($state['question'] ?? 'Pertanyaan tanpa judul'))
+                        ->label(fn(?array $state): string => $state === null ? 'Tanggal' : ($state['question'] ?? 'Pertanyaan tanpa judul'))
                         ->icon('heroicon-o-calendar-days')
                         ->schema([
                             TextInput::make('question')->label('Pertanyaan tanggal')->live(onBlur: true)->required(),
@@ -218,7 +225,7 @@ class LayananResource extends Resource
                             Hidden::make('valid')
                         ])->columns(2),
                     Block::make('file')
-                        ->label(fn (?array $state): string => $state === null ? 'Upload File' : ($state['question'] ?? 'Pertanyaan tanpa judul'))
+                        ->label(fn(?array $state): string => $state === null ? 'Upload File' : ($state['question'] ?? 'Pertanyaan tanpa judul'))
                         ->icon('heroicon-o-cloud-arrow-up')
                         ->schema([
                             TextInput::make('question')->label('Pertanyaan upload file')->live(onBlur: true)->required(),
@@ -229,7 +236,7 @@ class LayananResource extends Resource
                             Hidden::make('valid')
                         ])->columns(2),
                     Block::make('image')
-                        ->label(fn (?array $state): string => $state === null ? 'Upload Gambar' : ($state['question'] ?? 'Pertanyaan tanpa judul'))
+                        ->label(fn(?array $state): string => $state === null ? 'Upload Gambar' : ($state['question'] ?? 'Pertanyaan tanpa judul'))
                         ->icon('heroicon-o-photo')
                         ->schema([
                             TextInput::make('question')->label('Pertanyaan upload gambar/foto')->live(onBlur: true)->required(),

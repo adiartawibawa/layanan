@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Concerns\HasOrganization;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -28,6 +27,7 @@ class Layanan extends Model implements HasMedia
         'nama',
         'slug',
         'estimasi',
+        'kode',
         'desc',
         'panduan',
         'prasyarat',
