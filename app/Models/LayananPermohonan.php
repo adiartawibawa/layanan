@@ -4,10 +4,10 @@ namespace App\Models;
 
 use App\Scopes\UserAuthScope;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -15,6 +15,7 @@ class LayananPermohonan extends Model implements HasMedia
 {
     use HasUuids;
     use InteractsWithMedia;
+    use SoftDeletes;
 
     /**
      * The table associated with the model.
@@ -29,6 +30,8 @@ class LayananPermohonan extends Model implements HasMedia
         'prasyarat',
         'formulir'
     ];
+
+    protected $dates = ['deleted_at'];
 
     protected $casts = [
         'prasyarat' => 'array',

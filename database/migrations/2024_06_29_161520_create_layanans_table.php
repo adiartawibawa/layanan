@@ -31,6 +31,7 @@ return new class extends Migration
             $table->foreignUuid('layanan_id');
             $table->text('prasyarat')->nullable();
             $table->text('formulir')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
 

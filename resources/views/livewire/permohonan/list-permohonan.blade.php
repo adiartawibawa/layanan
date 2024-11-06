@@ -75,7 +75,7 @@
                                 ]
                                 Permohonan {{ $item->layanan->nama }}
                                 @if ($item->latestHistory->status == \App\Models\LayananPermohonanHistory::DIBUAT)
-                                    <button wire:click="mountAction('delete', { permohonan: '{{ $item->id }}' })"
+                                    <button wire:click="mountAction('batal', { permohonan: '{{ $item->id }}' })"
                                         class="underline text-xs text-rose-700">batalkan</button>
                                 @endif
                             </div>

@@ -3,6 +3,7 @@
 namespace App\Livewire\Permohonan;
 
 use App\Models\LayananPermohonan;
+use App\Models\LayananPermohonanHistory;
 use Filament\Actions\Action;
 use Filament\Actions\Concerns\InteractsWithActions;
 use Filament\Actions\Contracts\HasActions;
@@ -30,9 +31,10 @@ class ListPermohonan extends Component implements HasForms, HasActions
         $this->dispatch('openHistoryModal', permohonanId: $id);
     }
 
-    public function deleteAction(): Action
+    public function batalAction(): Action
     {
-        return Action::make('delete')
+        return Action::make('batal')
+            ->label('Batalkan Permohonan')
             ->requiresConfirmation()
             ->action(function (array $arguments) {
                 $permohonan = LayananPermohonan::find($arguments['permohonan']);
@@ -41,10 +43,16 @@ class ListPermohonan extends Component implements HasForms, HasActions
 
                 $this->dispatch('permohonan-updated');
 
+                // Log the status in the LayananPermohonanHistory model.
+                $this->datas->histories()->create([
+                    'status' => LayananPermohonanHistory::DIBATALKAN,
+                    'note' => "Permohonan telah dibatalkan oleh pemohon",
+                ]);
+
                 Notification::make()
                     ->title('Berhasil dibatalkan')
                     ->success()
-                    ->body('Pembatalan permohonan telah berhasil.')
+                    ->body('Permohonan telah berhasil dibatalkan.')
                     ->send();
             });
     }
@@ -54,34 +62,6 @@ class ListPermohonan extends Component implements HasForms, HasActions
     {
         $this->datas = LayananPermohonan::with('histories', 'latestHistory')->get();
     }
-
-    // public function deleteAction(): Action
-    // {
-    //     return Action::make('batalkan')
-    //         ->requiresConfirmation()
-    //         ->action(function (array $arguments) {
-    //             $permohonan = LayananPermohonan::find($arguments['permohonanId']);
-
-    //             dd($permohonan);
-    //             // if ($permohonan) {
-    //             //     $permohonan->delete();
-    //             //     $this->datas = LayananPermohonan::with('histories', 'latestHistory')->get();
-    //             //     $this->dispatch('notify', ['message' => 'Permohonan berhasil dibatalkan.']);
-    //             // }
-    //         });
-    // }
-
-    // public function batal($id)
-    // {
-    //     $this->permohonanId = LayananPermohonan::findOrFail($id);
-
-    //     $this->deletePermohonan();
-    //     // $permohonan->delete();
-
-    //     // $this->datas = LayananPermohonan::with('histories', 'latestHistory')->get();
-
-    //     // $this->dispatch('notify', ['message' => 'Permohonan berhasil dibatalkan.']);
-    // }
 
     public function render()
     {
