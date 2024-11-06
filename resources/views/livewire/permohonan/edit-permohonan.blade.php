@@ -41,10 +41,6 @@
             <div class="flex flex-row bg-white rounded-md p-4">
                 <form class="w-full" wire:submit="save">
                     {{ $this->editPermohonanForm }}
-
-                    {{-- <button class="mt-4 px-3 py-2 bg-red-600 text-sm rounded-md text-white" type="submit">
-                        Ajukan Ulang
-                    </button> --}}
                 </form>
             </div>
         </div>
