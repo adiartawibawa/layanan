@@ -1,7 +1,6 @@
 <x-layouts.main>
 
-    {{-- <div class="relative h-screen overflow-hidden bg-gray-100 dark:bg-gray-800 text-gray-800"> --}}
-    <div class="relative h-full overflow-hidden bg-gray-100 dark:bg-gray-800 text-gray-800">
+    <div class="relative h-screen overflow-hidden bg-gray-100 dark:bg-gray-800 text-gray-800">
         <div x-data="{ openMenu: false }" :class="openMenu ? 'overflow-hidden' : 'overflow-visible'"
             class="flex items-start justify-between">
 
