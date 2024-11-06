@@ -66,6 +66,8 @@ class PermohonanResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('kode_permohonan')
+                    ->label('Kode Permohonan'),
                 TextColumn::make('latestHistory.status_label')
                     ->label('Status'),
                 Tables\Columns\TextColumn::make('id')

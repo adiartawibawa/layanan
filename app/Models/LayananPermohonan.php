@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia;
+use Illuminate\Support\Str;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 class LayananPermohonan extends Model implements HasMedia
@@ -84,5 +85,26 @@ class LayananPermohonan extends Model implements HasMedia
     public function getLayananNamaAttribute()
     {
         return $this->layanan ? $this->layanan->nama : null;
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Event untuk menghasilkan kode permohonan layanan secara otomatis
+        static::creating(function ($layananPermohonan) {
+            $kodeLayanan = $layananPermohonan->layanan->kode;
+            $layananPermohonan->kode_permohonan = self::generateKodePermohonan($kodeLayanan);
+        });
+    }
+
+
+    public static function generateKodePermohonan($kodeLayanan)
+    {
+        do {
+            $kode = $kodeLayanan . '-' . date('Y') . '-' . Str::upper(Str::random(4));
+        } while (self::where('kode_permohonan', $kode)->exists());
+
+        return $kode;
     }
 }

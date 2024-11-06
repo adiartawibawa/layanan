@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('nama');
             $table->string('slug');
             $table->char('estimasi');
+            $table->char('kode', 10);
             $table->text('desc')->nullable();
             $table->text('panduan')->nullable();
             $table->text('prasyarat')->nullable();
@@ -27,6 +28,7 @@ return new class extends Migration
 
         Schema::create('layanan_permohonan', function (Blueprint $table) {
             $table->uuid('id')->primary();
+            $table->char('kode_permohonan');
             $table->foreignUuid('user_id');
             $table->foreignUuid('layanan_id');
             $table->text('prasyarat')->nullable();
