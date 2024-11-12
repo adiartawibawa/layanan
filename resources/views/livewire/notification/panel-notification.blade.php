@@ -59,7 +59,7 @@
                                 @default
                                     Status tidak diketahui
                             @endswitch
-                            . {{ $notification['created_at']->diffForHumans() }} .
+                            . {{ $notification['updated_at']->diffForHumans() }} .
                             @if (array_key_exists('read_at', $notification) && is_null($notification['read_at']))
                                 <span wire:click.prevent="markAsRead('{{ $notification['id'] }}')"
                                     class="hover:underline text-rose-800">Tandai telah dibaca</span>
