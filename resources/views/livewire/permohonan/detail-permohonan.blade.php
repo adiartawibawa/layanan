@@ -53,16 +53,6 @@
                     {{ $this->viewPermohonanForm }}
                 </form>
             </div>
-
-            <div class="flex flex-row bg-white rounded-md p-4">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit in iure facere minima, amet voluptatem
-                non corporis eligendi dolore, reiciendis dolores at laboriosam et totam tempore quas tenetur, quod nemo!
-            </div>
-
-            <div class="flex flex-row bg-white rounded-md p-4">
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit in iure facere minima, amet voluptatem
-                non corporis eligendi dolore, reiciendis dolores at laboriosam et totam tempore quas tenetur, quod nemo!
-            </div>
         </div>
     </div>
 
